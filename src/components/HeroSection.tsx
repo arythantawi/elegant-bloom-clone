@@ -187,13 +187,16 @@ const AnimatedTitle = ({
   staggerDelay?: number;
 }) => {
   const containerRef = useRef<HTMLSpanElement>(null);
+  const lettersRef = useRef<(HTMLSpanElement | null)[]>([]);
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
 
-    const ctx = gsap.context(() => {
-      const letters = gsap.utils.toArray<HTMLElement>(".letter");
+    // Get only letters within this specific container
+    const letters = lettersRef.current.filter(Boolean) as HTMLElement[];
+    if (letters.length === 0) return;
 
+    const ctx = gsap.context(() => {
       // Start hidden
       gsap.set(letters, {
         autoAlpha: 0,
@@ -214,7 +217,7 @@ const AnimatedTitle = ({
         overwrite: "auto",
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 85%",
+          start: "top 90%",
           toggleActions: "play none none reverse",
         },
       });
@@ -235,6 +238,7 @@ const AnimatedTitle = ({
       {text.split("").map((char, index) => (
         <span
           key={index}
+          ref={(el) => (lettersRef.current[index] = el)}
           className="letter inline-block relative"
           style={{ minWidth: char === " " ? "0.3em" : "auto" }}
         >
