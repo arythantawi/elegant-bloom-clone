@@ -8,6 +8,7 @@ import EventSection from "@/components/EventSection";
 import GallerySection from "@/components/GallerySection";
 import ArtGeneratorSection from "@/components/ArtGeneratorSection";
 import GiftSection from "@/components/GiftSection";
+import RSVPSection from "@/components/RSVPSection";
 import FooterSection from "@/components/FooterSection";
 import EnvelopeOpening from "@/components/EnvelopeOpening";
 
@@ -39,6 +40,7 @@ const Index = () => {
         <GallerySection />
         <ArtGeneratorSection />
         <GiftSection />
+        <RSVPSection />
         <FooterSection />
       </main>
     </>
