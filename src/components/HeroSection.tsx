@@ -192,35 +192,47 @@ const AnimatedTitle = ({
   useLayoutEffect(() => {
     if (!containerRef.current) return;
 
-    // Get only letters within this specific container
+    // Get only letters within this specific title line
     const letters = lettersRef.current.filter(Boolean) as HTMLElement[];
     if (letters.length === 0) return;
 
     const ctx = gsap.context(() => {
-      // Start hidden
-      gsap.set(letters, {
-        autoAlpha: 0,
-        yPercent: 140,
-        scale: 0.35,
-        transformOrigin: "50% 100%",
-      });
+      const play = () => {
+        gsap.killTweensOf(letters);
 
-      // Animate with ScrollTrigger
-      gsap.to(letters, {
-        autoAlpha: 1,
-        yPercent: 0,
-        scale: 1,
-        duration: 1.15,
-        stagger: 0.09,
-        ease: "elastic.out(1.4, 0.35)",
-        delay: staggerDelay,
-        overwrite: "auto",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 90%",
-          toggleActions: "play none none reverse",
+        // Set initial state only when we are about to animate (prevents "stuck invisible" state)
+        gsap.set(letters, {
+          autoAlpha: 0,
+          yPercent: 140,
+          scale: 0.35,
+          transformOrigin: "50% 100%",
+        });
+
+        gsap.to(letters, {
+          autoAlpha: 1,
+          yPercent: 0,
+          scale: 1,
+          duration: 1.15,
+          stagger: 0.09,
+          ease: "elastic.out(1.4, 0.35)",
+          delay: staggerDelay,
+          overwrite: "auto",
+        });
+      };
+
+      const st = ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top 90%",
+        onEnter: play,
+        onEnterBack: play,
+        onLeaveBack: () => {
+          gsap.killTweensOf(letters);
+          gsap.set(letters, { autoAlpha: 0 });
         },
       });
+
+      // If the title is already in-view on load, ensure it animates
+      if (st.isActive) play();
     }, containerRef);
 
     return () => ctx.revert();
