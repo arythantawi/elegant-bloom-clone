@@ -195,8 +195,8 @@ const AnimatedTitle = ({ text, colorClass, delay = 0 }: { text: string; colorCla
       gsap.to(letters, {
         opacity: 1,
         y: 0,
-        duration: 0.5,
-        stagger: 0.05,
+        duration: 0.7,
+        stagger: 0.08,
         ease: "back.out(1.7)",
         delay: delay,
         onComplete: () => setIsAnimated(true),
