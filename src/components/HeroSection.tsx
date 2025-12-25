@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import heroImage from "@/assets/hero-wedding.jpg";
-import coupleImage from "@/assets/couple-1.jpg";
+import heroPhoto1 from "@/assets/hero-photo-1.png";
+import heroPhoto2 from "@/assets/hero-photo-2.png";
+import heroPhoto3 from "@/assets/hero-photo-3.png";
 import FloralDecoration from "./FloralDecoration";
 import SparklesDecoration from "./SparklesDecoration";
 import { FloralSide4, Floral5, FloralExposure, GoldenFloral } from "./FloralDecorations";
@@ -61,16 +62,32 @@ const HeroSection = ({
         duration: 0.7
       }, 0.6);
 
-      // Gallery grid
+      // Gallery grid with staggered entrance and floating animation
       if (galleryRef.current) {
         const photos = galleryRef.current.querySelectorAll('.photo-item');
+        
+        // Initial entrance animation
         tl.from(photos, {
-          y: 50,
+          y: 80,
           opacity: 0,
-          scale: 0.95,
-          duration: 0.8,
-          stagger: 0.1
+          scale: 0.8,
+          rotateY: -15,
+          duration: 1.2,
+          stagger: 0.2,
+          ease: "back.out(1.7)"
         }, 0.7);
+
+        // Continuous floating animation for each photo
+        photos.forEach((photo, index) => {
+          gsap.to(photo, {
+            y: index % 2 === 0 ? -8 : 8,
+            duration: 2.5 + (index * 0.3),
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            delay: index * 0.2
+          });
+        });
       }
 
       // Guest name
@@ -174,38 +191,55 @@ const HeroSection = ({
           </p>
         </div>
 
-        {/* Photo Gallery Grid */}
-        <div ref={galleryRef} className="grid grid-cols-12 gap-3 md:gap-4 max-w-3xl mx-auto mb-10">
-          {/* Main large photo */}
-          <div className="photo-item col-span-5 row-span-2">
-            <div className="photo-frame photo-frame-rounded h-full overflow-hidden touch-lift">
-              <img src={coupleImage} alt="Oky & Mita" className="w-full h-full object-cover min-h-[200px] md:min-h-[300px]" />
+        {/* Aesthetic 3-Photo Gallery */}
+        <div ref={galleryRef} className="flex flex-col items-center gap-6 max-w-3xl mx-auto mb-10">
+          {/* Main Center Photo - Large with elegant frame */}
+          <div className="photo-item relative">
+            <div className="relative w-64 h-80 md:w-80 md:h-96 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-cream/50 transform hover:scale-[1.02] transition-all duration-500">
+              <div className="absolute inset-0 bg-gradient-to-t from-dusty-rose/20 via-transparent to-sage-green/10 z-10" />
+              <img 
+                src={heroPhoto1} 
+                alt="Oky & Mita" 
+                className="w-full h-full object-cover"
+              />
             </div>
+            {/* Decorative elements */}
+            <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-dusty-rose/60 rounded-tl-lg" />
+            <div className="absolute -top-3 -right-3 w-6 h-6 border-t-2 border-r-2 border-dusty-rose/60 rounded-tr-lg" />
+            <div className="absolute -bottom-3 -left-3 w-6 h-6 border-b-2 border-l-2 border-sage-green/60 rounded-bl-lg" />
+            <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-sage-green/60 rounded-br-lg" />
           </div>
-
-          {/* Arch photo */}
-          <div className="photo-item col-span-4">
-            <div className="photo-frame photo-frame-arch h-32 md:h-40 overflow-hidden touch-lift">
-              <img src={heroImage} alt="Wedding decoration" className="w-full h-full object-cover" />
-            </div>
-          </div>
-
-          {/* Small square photo */}
-          <div className="photo-item col-span-3">
-            <div className="photo-frame photo-frame-rounded h-32 md:h-40 overflow-hidden touch-lift">
-              <img src={heroImage} alt="Wedding detail" className="w-full h-full object-cover" />
-            </div>
-          </div>
-
-          {/* Circle photo */}
-          <div className="photo-item col-span-3">
-            <div className="photo-frame photo-frame-circle w-24 h-24 md:w-28 md:h-28 mx-auto overflow-hidden touch-lift">
-              <img src={heroImage} alt="Wedding rings" className="w-full h-full object-cover" />
-            </div>
-          </div>
-
-          {/* Bottom photos */}
           
+          {/* Two Side Photos */}
+          <div className="flex gap-4 md:gap-6">
+            {/* Left Photo - Rotated slightly */}
+            <div className="photo-item relative group">
+              <div className="relative w-36 h-44 md:w-44 md:h-56 rounded-2xl overflow-hidden shadow-xl border-2 border-cream/40 transform -rotate-3 hover:rotate-0 transition-all duration-500 group-hover:shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-sage-green/15 to-transparent z-10" />
+                <img 
+                  src={heroPhoto2} 
+                  alt="Our moments" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+              </div>
+              {/* Floating sparkle */}
+              <div className="absolute -top-2 -right-2 w-4 h-4 text-dusty-rose opacity-60">✦</div>
+            </div>
+            
+            {/* Right Photo - Rotated opposite */}
+            <div className="photo-item relative group">
+              <div className="relative w-36 h-44 md:w-44 md:h-56 rounded-2xl overflow-hidden shadow-xl border-2 border-cream/40 transform rotate-3 hover:rotate-0 transition-all duration-500 group-hover:shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-bl from-dusty-rose/15 to-transparent z-10" />
+                <img 
+                  src={heroPhoto3} 
+                  alt="Together forever" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+              </div>
+              {/* Floating sparkle */}
+              <div className="absolute -bottom-2 -left-2 w-4 h-4 text-sage-green opacity-60">✦</div>
+            </div>
+          </div>
         </div>
 
         {/* Guest Name */}
