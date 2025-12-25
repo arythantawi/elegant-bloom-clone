@@ -177,45 +177,58 @@ const PhotoWithCaption = ({
 };
 
 // Letter animation component
-const AnimatedTitle = ({ text, colorClass }: { text: string; colorClass: string }) => {
+const AnimatedTitle = ({ text, colorClass, delay = 0 }: { text: string; colorClass: string; delay?: number }) => {
   const containerRef = useRef<HTMLSpanElement>(null);
+  const [isAnimated, setIsAnimated] = useState(false);
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && !isAnimated) {
       const letters = containerRef.current.querySelectorAll('.letter');
-      gsap.fromTo(
-        letters,
-        {
-          opacity: 0,
-          y: 80,
-          rotateX: -90,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 0.6,
-          stagger: 0.05,
-          ease: "back.out(1.7)",
-          delay: colorClass.includes('dusty-rose') ? 0.3 : 0.8,
-        }
-      );
+      
+      // Set initial state - hidden
+      gsap.set(letters, {
+        opacity: 0,
+        y: 80,
+      });
+
+      // Animate in with stagger
+      gsap.to(letters, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.05,
+        ease: "back.out(1.7)",
+        delay: delay,
+        onComplete: () => setIsAnimated(true),
+      });
     }
-  }, [colorClass]);
+  }, [delay, isAnimated]);
 
   return (
     <span 
       ref={containerRef} 
-      className={`inline-block transform -rotate-[8deg] ${colorClass}`}
-      style={{ perspective: '1000px' }}
+      className={`title-line block relative ${colorClass}`}
+      style={{ 
+        transform: 'translateX(-50%) rotate(-10deg)',
+        left: '50%',
+      }}
     >
       {text.split('').map((char, index) => (
         <span
           key={index}
-          className="letter inline-block transform skew-x-[-8deg]"
+          className="letter inline-block relative"
           style={{
-            textShadow: '2px 2px 0 hsl(var(--foreground) / 0.15), 4px 4px 0 hsl(var(--foreground) / 0.1)',
+            transform: 'skew(-10deg)',
+            textShadow: `
+              hsl(var(--foreground) / 0.2) 1px 1px,
+              hsl(var(--foreground) / 0.18) 2px 2px,
+              hsl(var(--foreground) / 0.15) 3px 3px,
+              hsl(var(--foreground) / 0.12) 4px 4px,
+              hsl(var(--foreground) / 0.1) 5px 5px,
+              hsl(var(--foreground) / 0.08) 6px 6px
+            `,
             minWidth: char === ' ' ? '0.3em' : 'auto',
+            minHeight: '10px',
           }}
         >
           {char === ' ' ? '\u00A0' : char}
@@ -428,9 +441,9 @@ const HeroSection = ({
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto py-16">
         {/* Main Tagline */}
         <div ref={taglineRef} className="mb-8">
-          <h1 className="font-script text-5xl md:text-7xl lg:text-8xl mb-4 flex flex-col items-center gap-2">
-            <AnimatedTitle text="Dua Hati" colorClass="text-dusty-rose" />
-            <AnimatedTitle text="Satu Cerita" colorClass="text-sage-green" />
+          <h1 className="font-script text-5xl md:text-7xl lg:text-8xl mb-4 max-w-[280px] md:max-w-[400px] mx-auto">
+            <AnimatedTitle text="Dua Hati" colorClass="text-dusty-rose" delay={0.5} />
+            <AnimatedTitle text="Satu Cerita" colorClass="text-sage-green" delay={1.2} />
           </h1>
         </div>
 
