@@ -26,18 +26,19 @@ const HeroSection = ({
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         defaults: {
-          ease: "power3.out"
+          ease: "power2.out",
+          duration: 1.5
         }
       });
 
-      // Floral decorations scale in
+      // Floral decorations scale in - slower
       if (floralsRef.current) {
         const florals = floralsRef.current.querySelectorAll('.floral-item');
         tl.from(florals, {
-          scale: 0.5,
+          scale: 0.7,
           opacity: 0,
-          duration: 1,
-          stagger: 0.1
+          duration: 1.8,
+          stagger: 0.15
         }, 0);
       }
 
@@ -62,30 +63,30 @@ const HeroSection = ({
         duration: 0.7
       }, 0.6);
 
-      // Gallery grid with staggered entrance and floating animation
+      // Gallery grid with slow, smooth staggered entrance and floating animation
       if (galleryRef.current) {
         const photos = galleryRef.current.querySelectorAll('.photo-item');
         
-        // Initial entrance animation
+        // Initial entrance animation - much slower and smoother
         tl.from(photos, {
-          y: 80,
+          y: 60,
           opacity: 0,
-          scale: 0.8,
-          rotateY: -15,
-          duration: 1.2,
-          stagger: 0.2,
-          ease: "back.out(1.7)"
-        }, 0.7);
+          scale: 0.9,
+          rotateY: -8,
+          duration: 2,
+          stagger: 0.4,
+          ease: "power2.out"
+        }, 0.8);
 
-        // Continuous floating animation for each photo
+        // Continuous floating animation - gentler and slower
         photos.forEach((photo, index) => {
           gsap.to(photo, {
-            y: index % 2 === 0 ? -8 : 8,
-            duration: 2.5 + (index * 0.3),
+            y: index % 2 === 0 ? -6 : 6,
+            duration: 4 + (index * 0.5),
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut",
-            delay: index * 0.2
+            delay: index * 0.3
           });
         });
       }
