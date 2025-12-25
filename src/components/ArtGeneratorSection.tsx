@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Download, Sparkles, Image as ImageIcon } from "lucide-react";
+import { Loader2, Download, Sparkles, Upload, Image as ImageIcon, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import FloralDecoration from "./FloralDecoration";
@@ -16,17 +15,50 @@ const artStyles = [
   { value: 'digital-art', label: '✨ Digital Art' },
   { value: 'anime', label: '🌸 Anime' },
   { value: 'vintage', label: '📷 Vintage' },
+  { value: 'sketch', label: '✏️ Sketch' },
+  { value: 'pop-art', label: '🎭 Pop Art' },
 ];
 
 const ArtGeneratorSection = () => {
-  const [prompt, setPrompt] = useState("");
   const [style, setStyle] = useState("romantic");
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error("Pilih file gambar yang valid");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Ukuran file maksimal 10MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setUploadedImage(event.target?.result as string);
+      setGeneratedImage(null);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setUploadedImage(null);
+    setGeneratedImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) {
-      toast.error("Masukkan deskripsi gambar yang ingin dibuat");
+    if (!uploadedImage) {
+      toast.error("Upload foto terlebih dahulu");
       return;
     }
 
@@ -35,12 +67,12 @@ const ArtGeneratorSection = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('generate-art', {
-        body: { prompt, style }
+        body: { imageData: uploadedImage, style }
       });
 
       if (error) {
         console.error('Edge function error:', error);
-        throw new Error(error.message || 'Gagal generate gambar');
+        throw new Error(error.message || 'Gagal transform gambar');
       }
 
       if (data?.error) {
@@ -49,13 +81,13 @@ const ArtGeneratorSection = () => {
 
       if (data?.image) {
         setGeneratedImage(data.image);
-        toast.success("Gambar berhasil dibuat! ✨");
+        toast.success("Foto berhasil diubah menjadi karya seni! ✨");
       } else {
         throw new Error('Tidak ada gambar yang dihasilkan');
       }
     } catch (error) {
       console.error('Error generating art:', error);
-      toast.error(error instanceof Error ? error.message : 'Gagal membuat gambar');
+      toast.error(error instanceof Error ? error.message : 'Gagal membuat art');
     } finally {
       setIsLoading(false);
     }
@@ -82,33 +114,64 @@ const ArtGeneratorSection = () => {
       <div className="container max-w-4xl mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <p className="font-display text-lg tracking-[0.2em] text-muted-foreground mb-4 uppercase">
-            AI Art Generator
+            AI Photo Art
           </p>
           <h2 className="font-script text-5xl md:text-6xl mb-6">
-            <span className="text-sage-green">Buat</span>{" "}
-            <span className="text-dusty-rose">Karya Seni</span>
+            <span className="text-sage-green">Ubah Foto</span>{" "}
+            <span className="text-dusty-rose">Jadi Seni</span>
           </h2>
           <div className="section-divider w-24 mx-auto" />
           <p className="text-muted-foreground mt-6 max-w-lg mx-auto">
-            Buat gambar artistik unik dengan AI. Masukkan deskripsi dan pilih gaya yang diinginkan.
+            Upload foto Anda dan ubah menjadi karya seni dengan berbagai gaya artistik
           </p>
         </div>
 
-        {/* Generator Form */}
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-elegant border border-dusty-rose/20">
           <div className="space-y-6">
-            {/* Prompt Input */}
+            {/* Upload Area */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Deskripsi Gambar
+                Upload Foto
               </label>
-              <Input
-                placeholder="Contoh: Pasangan romantis di taman bunga dengan sunset"
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                className="bg-cream/50 border-dusty-rose/30 focus:border-dusty-rose"
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
                 disabled={isLoading}
               />
+              
+              {!uploadedImage ? (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isLoading}
+                  className="w-full h-48 border-2 border-dashed border-dusty-rose/40 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-dusty-rose hover:bg-dusty-rose/5 transition-all cursor-pointer"
+                >
+                  <Upload className="w-10 h-10 text-dusty-rose/60" />
+                  <p className="text-muted-foreground text-sm">
+                    Klik untuk upload foto
+                  </p>
+                  <p className="text-muted-foreground/60 text-xs">
+                    JPG, PNG, WEBP (max 10MB)
+                  </p>
+                </button>
+              ) : (
+                <div className="relative">
+                  <img
+                    src={uploadedImage}
+                    alt="Uploaded"
+                    className="w-full h-48 object-cover rounded-2xl"
+                  />
+                  <button
+                    onClick={handleRemoveImage}
+                    disabled={isLoading}
+                    className="absolute top-2 right-2 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Style Select */}
@@ -133,7 +196,7 @@ const ArtGeneratorSection = () => {
             {/* Generate Button */}
             <Button
               onClick={handleGenerate}
-              disabled={isLoading || !prompt.trim()}
+              disabled={isLoading || !uploadedImage}
               className="w-full bg-gradient-to-r from-dusty-rose to-sage-green hover:opacity-90 text-white font-semibold py-6 text-lg"
             >
               {isLoading ? (
@@ -144,33 +207,11 @@ const ArtGeneratorSection = () => {
               ) : (
                 <>
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Generate Art
+                  Transform ke Art
                 </>
               )}
             </Button>
           </div>
-
-          {/* Generated Image Display */}
-          {generatedImage && (
-            <div className="mt-8 animate-fade-in">
-              <div className="relative rounded-2xl overflow-hidden shadow-elegant border-4 border-white">
-                <img
-                  src={generatedImage}
-                  alt="Generated Art"
-                  className="w-full h-auto"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
-              </div>
-              <Button
-                onClick={handleDownload}
-                variant="outline"
-                className="w-full mt-4 border-dusty-rose text-dusty-rose hover:bg-dusty-rose hover:text-white"
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Download Gambar
-              </Button>
-            </div>
-          )}
 
           {/* Loading State */}
           {isLoading && (
@@ -180,8 +221,30 @@ const ArtGeneratorSection = () => {
                 <ImageIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-dusty-rose animate-bounce" />
               </div>
               <p className="mt-4 text-muted-foreground text-sm animate-pulse">
-                AI sedang membuat karya seni untuk Anda...
+                AI sedang mengubah foto Anda menjadi karya seni...
               </p>
+            </div>
+          )}
+
+          {/* Generated Image Display */}
+          {generatedImage && !isLoading && (
+            <div className="mt-8 animate-fade-in">
+              <p className="text-sm font-medium text-foreground mb-3">Hasil:</p>
+              <div className="relative rounded-2xl overflow-hidden shadow-elegant border-4 border-white">
+                <img
+                  src={generatedImage}
+                  alt="Generated Art"
+                  className="w-full h-auto"
+                />
+              </div>
+              <Button
+                onClick={handleDownload}
+                variant="outline"
+                className="w-full mt-4 border-dusty-rose text-dusty-rose hover:bg-dusty-rose hover:text-white"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download Gambar
+              </Button>
             </div>
           )}
         </div>
