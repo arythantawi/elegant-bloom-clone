@@ -739,7 +739,7 @@
 }
 
 /* Handwritten SVG Path Animation */
-.handwritten-path {
+.path {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
