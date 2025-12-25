@@ -131,8 +131,8 @@ const CoupleSection = () => {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto perspective-1000">
           {/* Groom Card */}
           <figure ref={groomRef} className="profile-card group">
-            <img src={couple1} alt="Oky Dwi Prasetyo" className="profile-card-bg" />
-            <img src={couple1} alt="Oky Dwi Prasetyo" className="profile-card-avatar" />
+            <img alt="Oky Dwi Prasetyo" className="profile-card-bg" src="/lovable-uploads/01f7998c-6707-4bf9-ad10-7ad4068f4901.jpg" />
+            <img alt="Oky Dwi Prasetyo" className="profile-card-avatar" src="/lovable-uploads/01f90ffe-ab02-4f9f-9720-208c9f292204.jpg" />
             <figcaption className="profile-card-caption">
               <h3 className="profile-card-name">
                 Oky Dwi Prasetyo, S.Kom
@@ -148,8 +148,8 @@ const CoupleSection = () => {
 
           {/* Bride Card */}
           <figure ref={brideRef} className="profile-card group">
-            <img src={couple2} alt="Mita Berliana" className="profile-card-bg" />
-            <img src={couple2} alt="Mita Berliana" className="profile-card-avatar" />
+            <img alt="Mita Berliana" className="profile-card-bg" src="/lovable-uploads/fe2cba22-f0b5-4238-8c1f-94fe7dae93be.jpg" />
+            <img alt="Mita Berliana" className="profile-card-avatar" src="/lovable-uploads/17a6bc32-b3b6-4f96-9237-b43ae7b6bb11.jpg" />
             <figcaption className="profile-card-caption">
               <h3 className="profile-card-name">
                 Mita Berliana, S.Si, M.Si
