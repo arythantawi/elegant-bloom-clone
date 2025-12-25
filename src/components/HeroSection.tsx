@@ -413,7 +413,7 @@ const HeroSection = ({
           <PhotoWithCaption
             src={heroPhoto1}
             alt="Oky & Mita"
-            caption="Our Beginning"
+            caption="Kencan Pertama 2024"
             location="Surabaya, Indonesia"
             isMain
           />
