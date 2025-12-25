@@ -434,7 +434,7 @@ const HeroSection = ({
               src={heroPhoto3}
               alt="Together forever"
               caption="Forever Us"
-              location="Bali"
+              location="Malang"
               rotation="right"
             />
           </div>
