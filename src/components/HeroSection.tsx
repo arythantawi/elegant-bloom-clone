@@ -424,7 +424,7 @@ const HeroSection = ({
             <PhotoWithCaption
               src={heroPhoto2}
               alt="Our moments"
-              caption="Sweet Memories"
+              caption="After Engagement 2025"
               location="Surabaya"
               rotation="left"
             />
