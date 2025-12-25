@@ -433,7 +433,7 @@ const HeroSection = ({
             <PhotoWithCaption
               src={heroPhoto3}
               alt="Together forever"
-              caption="Forever Us"
+              caption="Before Married 2025"
               location="Malang"
               rotation="right"
             />
