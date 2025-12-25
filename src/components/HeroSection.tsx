@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { animate, stagger } from "animejs";
 import heroPhoto1 from "@/assets/hero-photo-1.png";
 import heroPhoto2 from "@/assets/hero-photo-2.png";
 import heroPhoto3 from "@/assets/hero-photo-3.png";
@@ -248,15 +249,27 @@ const HeroSection = ({
         );
       }
 
-      // Handwritten SVG path animation
-      const handwrittenPaths = document.querySelectorAll('.handwritten-path');
-      if (handwrittenPaths.length > 0) {
-        tl.to(handwrittenPaths, {
-          strokeDashoffset: 0,
-          duration: 3,
-          stagger: 0.8,
-          ease: "power2.inOut",
-        }, 0.3);
+      // Handwritten SVG path animation using anime.js
+      const svgPaths = document.querySelectorAll('.path');
+      if (svgPaths.length > 0) {
+        svgPaths.forEach((path) => {
+          const pathElement = path as SVGPathElement;
+          const length = pathElement.getTotalLength();
+          pathElement.style.strokeDasharray = String(length);
+          pathElement.style.strokeDashoffset = String(length);
+        });
+        
+        animate('.path', {
+          strokeDashoffset: [
+            (el: SVGPathElement) => el.getTotalLength(),
+            0
+          ],
+          easing: 'inOutSine',
+          duration: 700,
+          loop: true,
+          alternate: true,
+          delay: stagger(500)
+        });
       }
 
       // Tagline animation (for parallax)
@@ -412,32 +425,24 @@ const HeroSection = ({
             {/* Dua Hati - Line 1 */}
             <g transform="translate(60, 5) scale(0.58)">
               <path 
-                className="handwritten-path"
+                className="path"
                 clipPath="url(#duaHatiClip)" 
                 d="M0 27 Q50 27 100 27 Q150 27 187 27 M0 27 L187 45" 
                 fill="none" 
                 stroke="url(#taglineGradient)" 
                 strokeWidth="55"
-                style={{
-                  strokeDasharray: 2000,
-                  strokeDashoffset: 2000,
-                }}
               />
             </g>
             
             {/* Satu Cerita - Line 2 */}
             <g transform="translate(30, 58) scale(0.58)">
               <path 
-                className="handwritten-path"
+                className="path"
                 clipPath="url(#satuCeritaClip)" 
                 d="M0 27 Q60 27 120 27 Q180 27 245 27 M0 27 L245 45" 
                 fill="none" 
                 stroke="url(#taglineGradient)" 
                 strokeWidth="55"
-                style={{
-                  strokeDasharray: 2500,
-                  strokeDashoffset: 2500,
-                }}
               />
             </g>
           </svg>
