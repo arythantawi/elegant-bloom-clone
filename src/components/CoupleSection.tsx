@@ -18,70 +18,97 @@ const CoupleSection = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header animations
-      gsap.from(headerRef.current, {
-        y: -30,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      });
+      // Header animations with smooth scrub
+      gsap.fromTo(headerRef.current, 
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+            end: "top 50%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
 
-      gsap.from(titleRef.current, {
-        scale: 0.9,
-        opacity: 0,
-        duration: 0.7,
-        delay: 0.1,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      });
+      gsap.fromTo(titleRef.current, 
+        { scale: 0.85, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
 
-      gsap.from(dividerRef.current, {
-        width: 0,
-        opacity: 0,
-        duration: 0.6,
-        delay: 0.2,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      });
+      gsap.fromTo(dividerRef.current, 
+        { scaleX: 0, opacity: 0 },
+        {
+          scaleX: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 70%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
 
-      // Groom card slide in from left
-      gsap.from(groomRef.current, {
-        x: -100,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: groomRef.current,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
-      });
+      // Groom card slide in from left with parallax
+      gsap.fromTo(groomRef.current,
+        { x: -100, opacity: 0, rotateY: 15 },
+        {
+          x: 0,
+          opacity: 1,
+          rotateY: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: groomRef.current,
+            start: "top 85%",
+            end: "top 50%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
 
-      // Bride card slide in from right
-      gsap.from(brideRef.current, {
-        x: 100,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: brideRef.current,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
+      // Bride card slide in from right with parallax
+      gsap.fromTo(brideRef.current,
+        { x: 100, opacity: 0, rotateY: -15 },
+        {
+          x: 0,
+          opacity: 1,
+          rotateY: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: brideRef.current,
+            start: "top 85%",
+            end: "top 50%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      // Subtle floating animation on cards
+      gsap.to([groomRef.current, brideRef.current], {
+        y: -10,
+        duration: 3,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.5,
       });
 
     }, sectionRef);
@@ -109,10 +136,10 @@ const CoupleSection = () => {
           <h2 ref={titleRef} className="font-script text-5xl md:text-6xl mb-6">
             <span className="text-dusty-rose">Mempelai</span>
           </h2>
-          <div ref={dividerRef} className="section-divider w-24 mx-auto" />
+          <div ref={dividerRef} className="section-divider w-24 mx-auto origin-center" />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto perspective-1000">
           {/* Groom Card */}
           <figure ref={groomRef} className="profile-card group">
             <img

@@ -1,4 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Download, Sparkles, Upload, Image as ImageIcon, X } from "lucide-react";
@@ -6,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import FloralDecoration from "./FloralDecoration";
 import SparklesDecoration from "./SparklesDecoration";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const artStyles = [
   { value: 'romantic', label: '💕 Romantic' },
@@ -25,6 +29,98 @@ const ArtGeneratorSection = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLParagraphElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const dividerRef = useRef<HTMLDivElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header animations
+      gsap.fromTo(headerRef.current, 
+        { y: 40, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "power3.out", 
+          scrollTrigger: { 
+            trigger: sectionRef.current, 
+            start: "top 80%", 
+            toggleActions: "play none none reverse" 
+          } 
+        }
+      );
+
+      gsap.fromTo(titleRef.current, 
+        { scale: 0.85, opacity: 0 },
+        { 
+          scale: 1, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "back.out(1.7)", 
+          scrollTrigger: { 
+            trigger: sectionRef.current, 
+            start: "top 75%", 
+            toggleActions: "play none none reverse" 
+          } 
+        }
+      );
+
+      gsap.fromTo(dividerRef.current, 
+        { scaleX: 0, opacity: 0 },
+        { 
+          scaleX: 1, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "power2.out", 
+          scrollTrigger: { 
+            trigger: sectionRef.current, 
+            start: "top 70%", 
+            toggleActions: "play none none reverse" 
+          } 
+        }
+      );
+
+      gsap.fromTo(descRef.current, 
+        { y: 30, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "power3.out", 
+          scrollTrigger: { 
+            trigger: descRef.current, 
+            start: "top 85%", 
+            toggleActions: "play none none reverse" 
+          } 
+        }
+      );
+
+      // Form card animation
+      gsap.fromTo(formRef.current,
+        { y: 60, opacity: 0, scale: 0.95 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: formRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -106,27 +202,27 @@ const ArtGeneratorSection = () => {
   };
 
   return (
-    <section id="art-generator" className="py-24 bg-gradient-to-b from-cream via-blush-pink/30 to-cream relative overflow-hidden">
+    <section ref={sectionRef} id="art-generator" className="py-24 bg-gradient-to-b from-cream via-blush-pink/30 to-cream relative overflow-hidden">
       <FloralDecoration position="top-left" size="md" className="opacity-50" variant={3} />
       <FloralDecoration position="bottom-right" size="md" className="opacity-50" variant={4} />
       <SparklesDecoration count={8} />
 
       <div className="container max-w-4xl mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
-          <p className="font-display text-lg tracking-[0.2em] text-muted-foreground mb-4 uppercase">
+          <p ref={headerRef} className="font-display text-lg tracking-[0.2em] text-muted-foreground mb-4 uppercase">
             AI Photo Art
           </p>
-          <h2 className="font-script text-5xl md:text-6xl mb-6">
+          <h2 ref={titleRef} className="font-script text-5xl md:text-6xl mb-6">
             <span className="text-sage-green">Ubah Foto</span>{" "}
             <span className="text-dusty-rose">Jadi Seni</span>
           </h2>
-          <div className="section-divider w-24 mx-auto" />
-          <p className="text-muted-foreground mt-6 max-w-lg mx-auto">
+          <div ref={dividerRef} className="section-divider w-24 mx-auto origin-center" />
+          <p ref={descRef} className="text-muted-foreground mt-6 max-w-lg mx-auto">
             Upload foto Anda dan ubah menjadi karya seni dengan berbagai gaya artistik
           </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-elegant border border-dusty-rose/20">
+        <div ref={formRef} className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-elegant border border-dusty-rose/20">
           <div className="space-y-6">
             {/* Upload Area */}
             <div>
