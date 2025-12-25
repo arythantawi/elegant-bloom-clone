@@ -414,7 +414,7 @@ const HeroSection = ({
             src={heroPhoto1}
             alt="Oky & Mita"
             caption="Kencan Pertama 2024"
-            location="Surabaya, Indonesia"
+            location="JOKOPI - Dinoyo Surabaya"
             isMain
           />
           
