@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import heroPhoto1 from "@/assets/hero-photo-1.png";
@@ -22,6 +22,42 @@ const HeroSection = ({
   const guestRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const floralsRef = useRef<HTMLDivElement>(null);
+  
+  // Typing effect state
+  const [displayedName, setDisplayedName] = useState("");
+  const fullName = "Oky Dwi Prasetyo & Mita Berliana";
+  const [showCursor, setShowCursor] = useState(true);
+  // Typing effect for names
+  useEffect(() => {
+    let currentIndex = 0;
+    const typingDelay = 2000; // Wait before starting typing
+    
+    const startTyping = setTimeout(() => {
+      const typingInterval = setInterval(() => {
+        if (currentIndex <= fullName.length) {
+          setDisplayedName(fullName.slice(0, currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+          // Keep cursor blinking for a bit then hide
+          setTimeout(() => setShowCursor(false), 1500);
+        }
+      }, 80); // Speed of typing
+      
+      return () => clearInterval(typingInterval);
+    }, typingDelay);
+    
+    // Cursor blinking
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 530);
+    
+    return () => {
+      clearTimeout(startTyping);
+      clearInterval(cursorInterval);
+    };
+  }, []);
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -185,10 +221,15 @@ const HeroSection = ({
           </div>
         </div>
 
-        {/* Names */}
-        <div ref={namesRef} className="mb-10">
-          <p className="font-display text-xl md:text-2xl text-muted-foreground tracking-[0.3em] uppercase">
-            Oky Dwi Prasetyo & Mita Berliana
+        {/* Names with Typing Effect */}
+        <div ref={namesRef} className="mb-10 min-h-[2rem]">
+          <p className="font-display text-xl md:text-2xl text-muted-foreground tracking-[0.2em] uppercase">
+            {displayedName}
+            <span 
+              className={`inline-block w-0.5 h-5 md:h-6 bg-dusty-rose ml-1 align-middle transition-opacity duration-100 ${
+                showCursor && displayedName.length < fullName.length ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
           </p>
         </div>
 
