@@ -425,7 +425,7 @@ const HeroSection = ({
               src={heroPhoto2}
               alt="Our moments"
               caption="Sweet Memories"
-              location="Bandung"
+              location="Surabaya"
               rotation="left"
             />
             
