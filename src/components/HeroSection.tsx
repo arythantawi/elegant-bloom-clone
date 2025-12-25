@@ -62,20 +62,25 @@ const HeroSection = ({
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         defaults: {
-          ease: "power2.out",
-          duration: 1.5
-        }
+          ease: "power3.out",
+          duration: 2.2,
+        },
       });
 
-      // Floral decorations scale in - slower
+      // Floral decorations scale in - extra smooth
       if (floralsRef.current) {
-        const florals = floralsRef.current.querySelectorAll('.floral-item');
-        tl.from(florals, {
-          scale: 0.7,
-          opacity: 0,
-          duration: 1.8,
-          stagger: 0.15
-        }, 0);
+        const florals = floralsRef.current.querySelectorAll(".floral-item");
+        tl.from(
+          florals,
+          {
+            scale: 0.78,
+            opacity: 0,
+            duration: 2.8,
+            stagger: 0.22,
+            ease: "power2.out",
+          },
+          0
+        );
       }
 
       // Tagline animation
@@ -101,28 +106,32 @@ const HeroSection = ({
 
       // Gallery grid with slow, smooth staggered entrance and floating animation
       if (galleryRef.current) {
-        const photos = galleryRef.current.querySelectorAll('.photo-item');
-        
-        // Initial entrance animation - much slower and smoother
-        tl.from(photos, {
-          y: 60,
-          opacity: 0,
-          scale: 0.9,
-          rotateY: -8,
-          duration: 2,
-          stagger: 0.4,
-          ease: "power2.out"
-        }, 0.8);
+        const photos = galleryRef.current.querySelectorAll(".photo-item");
+
+        // Initial entrance animation - slower and smoother
+        tl.from(
+          photos,
+          {
+            y: 80,
+            opacity: 0,
+            scale: 0.92,
+            rotateY: -6,
+            duration: 3.2,
+            stagger: 0.6,
+            ease: "power3.out",
+          },
+          0.9
+        );
 
         // Continuous floating animation - gentler and slower
         photos.forEach((photo, index) => {
           gsap.to(photo, {
-            y: index % 2 === 0 ? -6 : 6,
-            duration: 4 + (index * 0.5),
+            y: index % 2 === 0 ? -4 : 4,
+            duration: 7 + index * 0.6,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut",
-            delay: index * 0.3
+            delay: index * 0.45,
           });
         });
       }
@@ -153,24 +162,24 @@ const HeroSection = ({
 
       // Parallax effect on scroll
       gsap.to(taglineRef.current, {
-        y: -30,
+        y: -22,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 1.5
-        }
+          scrub: 2.8,
+        },
       });
       gsap.to(galleryRef.current, {
-        y: -20,
+        y: -14,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 1.5
-        }
+          scrub: 2.8,
+        },
       });
     }, sectionRef);
     return () => ctx.revert();
