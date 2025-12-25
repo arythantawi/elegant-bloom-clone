@@ -414,7 +414,7 @@ const HeroSection = ({
             src={heroPhoto1}
             alt="Oky & Mita"
             caption="Our Beginning"
-            location="Jakarta, Indonesia"
+            location="Surabaya, Indonesia"
             isMain
           />
           
