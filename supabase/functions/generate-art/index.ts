@@ -6,17 +6,16 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { prompt, style } = await req.json();
+    const { imageData, style } = await req.json();
     
-    if (!prompt) {
+    if (!imageData) {
       return new Response(
-        JSON.stringify({ error: 'Prompt is required' }),
+        JSON.stringify({ error: 'Image is required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -30,21 +29,21 @@ serve(async (req) => {
       );
     }
 
-    // Build the enhanced prompt with style
     const stylePrompts: Record<string, string> = {
-      'watercolor': 'watercolor painting style, soft edges, flowing colors, artistic brush strokes',
-      'oil-painting': 'oil painting style, rich textures, classic artistic technique, museum quality',
-      'digital-art': 'digital art style, vibrant colors, modern illustration, high quality render',
-      'anime': 'anime art style, Japanese animation aesthetic, detailed character design',
-      'vintage': 'vintage photography style, sepia tones, nostalgic, retro aesthetic',
-      'romantic': 'romantic dreamy style, soft lighting, ethereal atmosphere, love theme',
-      'wedding': 'elegant wedding photography style, romantic, beautiful lighting, professional',
+      'watercolor': 'Transform this photo into a beautiful watercolor painting with soft edges, flowing colors, and artistic brush strokes. Keep the subjects recognizable.',
+      'oil-painting': 'Transform this photo into a classical oil painting with rich textures, dramatic lighting, and museum-quality artistic technique.',
+      'digital-art': 'Transform this photo into vibrant digital art with modern illustration style, enhanced colors, and high quality artistic render.',
+      'anime': 'Transform this photo into anime art style with Japanese animation aesthetic, clean lines, and expressive features.',
+      'vintage': 'Transform this photo into a vintage photograph with sepia tones, nostalgic feel, and retro aesthetic.',
+      'romantic': 'Transform this photo into a romantic dreamy artwork with soft lighting, ethereal atmosphere, and beautiful artistic touches.',
+      'wedding': 'Transform this photo into an elegant wedding portrait style with romantic lighting, soft focus, and professional artistic quality.',
+      'sketch': 'Transform this photo into a detailed pencil sketch with artistic shading and hand-drawn appearance.',
+      'pop-art': 'Transform this photo into bold pop art style with vibrant colors, comic-like appearance, and artistic contrast.',
     };
 
-    const styleEnhancement = stylePrompts[style] || stylePrompts['romantic'];
-    const enhancedPrompt = `Create a beautiful artistic image: ${prompt}. Style: ${styleEnhancement}. Ultra high resolution, masterpiece quality.`;
-
-    console.log('Generating art with prompt:', enhancedPrompt);
+    const stylePrompt = stylePrompts[style] || stylePrompts['romantic'];
+    
+    console.log('Transforming image with style:', style);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -57,7 +56,18 @@ serve(async (req) => {
         messages: [
           {
             role: "user",
-            content: enhancedPrompt
+            content: [
+              {
+                type: "text",
+                text: stylePrompt
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: imageData
+                }
+              }
+            ]
           }
         ],
         modalities: ["image", "text"]
@@ -82,7 +92,7 @@ serve(async (req) => {
       }
       
       return new Response(
-        JSON.stringify({ error: 'Failed to generate image' }),
+        JSON.stringify({ error: 'Failed to transform image' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -90,22 +100,18 @@ serve(async (req) => {
     const data = await response.json();
     console.log('AI response received');
     
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-    const textContent = data.choices?.[0]?.message?.content;
+    const resultImage = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
 
-    if (!imageUrl) {
+    if (!resultImage) {
       console.error('No image in response:', JSON.stringify(data));
       return new Response(
-        JSON.stringify({ error: 'No image generated', details: textContent }),
+        JSON.stringify({ error: 'Failed to generate art from image' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     return new Response(
-      JSON.stringify({ 
-        image: imageUrl,
-        description: textContent 
-      }),
+      JSON.stringify({ image: resultImage }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
