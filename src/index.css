@@ -738,16 +738,8 @@
   }
 }
 
-/* Handwritten SVG Text Animation */
-.handwritten-text {
-  font-family: 'Great Vibes', cursive;
+/* Handwritten SVG Path Animation */
+.handwritten-path {
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: fill 0.5s ease-out;
-}
-
-@media (max-width: 768px) {
-  .handwritten-text {
-    font-size: 32px;
-  }
 }
