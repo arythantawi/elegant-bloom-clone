@@ -248,12 +248,32 @@ const HeroSection = ({
         );
       }
 
-      // Tagline animation
+      // Handwritten SVG text animation
+      const handwrittenTexts = document.querySelectorAll('.handwritten-text');
+      if (handwrittenTexts.length > 0) {
+        tl.to(handwrittenTexts, {
+          strokeDashoffset: 0,
+          duration: 3,
+          stagger: 0.5,
+          ease: "power2.inOut",
+          onComplete: () => {
+            // Fill in after stroke animation
+            gsap.to(handwrittenTexts, {
+              fill: "url(#taglineGradient)",
+              duration: 1,
+              stagger: 0.2,
+              ease: "power2.out",
+            });
+          }
+        }, 0.3);
+      }
+
+      // Tagline animation (for parallax)
       tl.from(taglineRef.current, {
         y: -50,
         opacity: 0,
         duration: 1
-      }, 0.3);
+      }, 0.1);
 
       // Date badge
       tl.from(dateRef.current, {
@@ -379,11 +399,51 @@ const HeroSection = ({
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto py-16">
         {/* Main Tagline */}
         <div ref={taglineRef} className="mb-8">
-          <h1 className="font-script text-5xl md:text-7xl lg:text-8xl mb-4">
-            <span className="text-dusty-rose">Dua Hati</span>
-            {" "}
-            <span className="text-sage-green">Satu Cerita</span>
-          </h1>
+          <svg 
+            viewBox="0 0 600 120" 
+            className="w-full max-w-2xl mx-auto h-auto"
+            style={{ overflow: 'visible' }}
+          >
+            <defs>
+              <linearGradient id="taglineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="hsl(var(--dusty-rose))" />
+                <stop offset="50%" stopColor="hsl(var(--sage-green))" />
+                <stop offset="100%" stopColor="hsl(var(--dusty-rose))" />
+              </linearGradient>
+            </defs>
+            <text
+              x="300"
+              y="50"
+              textAnchor="middle"
+              className="handwritten-text font-script"
+              fill="none"
+              stroke="url(#taglineGradient)"
+              strokeWidth="1.5"
+              fontSize="48"
+              style={{
+                strokeDasharray: 1000,
+                strokeDashoffset: 1000,
+              }}
+            >
+              Dua Hati
+            </text>
+            <text
+              x="300"
+              y="100"
+              textAnchor="middle"
+              className="handwritten-text font-script"
+              fill="none"
+              stroke="url(#taglineGradient)"
+              strokeWidth="1.5"
+              fontSize="48"
+              style={{
+                strokeDasharray: 1000,
+                strokeDashoffset: 1000,
+              }}
+            >
+              Satu Cerita
+            </text>
+          </svg>
         </div>
 
         {/* Date Badge */}
