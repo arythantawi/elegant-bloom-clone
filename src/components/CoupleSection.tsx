@@ -132,7 +132,7 @@ const CoupleSection = () => {
           {/* Groom Card */}
           <figure ref={groomRef} className="profile-card group">
             <img src={couple1} alt="Oky Dwi Prasetyo" className="profile-card-bg" />
-            <img alt="Oky Dwi Prasetyo" className="profile-card-avatar" src="/lovable-uploads/673af299-6126-4005-b44e-4d79a6336c5e.jpg" />
+            <img src={couple1} alt="Oky Dwi Prasetyo" className="profile-card-avatar" />
             <figcaption className="profile-card-caption">
               <h3 className="profile-card-name">
                 Oky Dwi Prasetyo, S.Kom
