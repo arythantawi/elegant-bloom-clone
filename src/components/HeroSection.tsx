@@ -174,38 +174,71 @@ const HeroSection = ({
           </p>
         </div>
 
-        {/* Photo Gallery Grid */}
-        <div ref={galleryRef} className="grid grid-cols-12 gap-3 md:gap-4 max-w-3xl mx-auto mb-10">
-          {/* Main large photo */}
-          <div className="photo-item col-span-5 row-span-2">
-            <div className="photo-frame photo-frame-rounded h-full overflow-hidden touch-lift">
-              <img src={coupleImage} alt="Oky & Mita" className="w-full h-full object-cover min-h-[200px] md:min-h-[300px]" />
+        {/* Photo Gallery Grid - Aesthetic Mosaic */}
+        <div ref={galleryRef} className="max-w-2xl mx-auto mb-10">
+          <div className="grid grid-cols-3 gap-3 md:gap-4">
+            {/* Main large portrait photo */}
+            <div className="photo-item col-span-2 row-span-2">
+              <div className="relative h-[280px] md:h-[380px] rounded-3xl overflow-hidden shadow-elegant touch-lift group">
+                <img 
+                  src={coupleImage} 
+                  alt="Oky & Mita" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </div>
             </div>
-          </div>
 
-          {/* Arch photo */}
-          <div className="photo-item col-span-4">
-            <div className="photo-frame photo-frame-arch h-32 md:h-40 overflow-hidden touch-lift">
-              <img src={heroImage} alt="Wedding decoration" className="w-full h-full object-cover" />
+            {/* Right side stacked photos */}
+            <div className="photo-item">
+              <div className="relative h-[132px] md:h-[180px] rounded-2xl overflow-hidden shadow-elegant touch-lift group">
+                <img 
+                  src={heroImage} 
+                  alt="Wedding moment" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Small square photo */}
-          <div className="photo-item col-span-3">
-            <div className="photo-frame photo-frame-rounded h-32 md:h-40 overflow-hidden touch-lift">
-              <img src={heroImage} alt="Wedding detail" className="w-full h-full object-cover" />
+            <div className="photo-item">
+              <div className="relative h-[132px] md:h-[180px] rounded-2xl overflow-hidden shadow-elegant touch-lift group">
+                <img 
+                  src={heroImage} 
+                  alt="Wedding detail" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Circle photo */}
-          <div className="photo-item col-span-3">
-            
-          </div>
+            {/* Bottom row - three equal photos */}
+            <div className="photo-item">
+              <div className="relative h-[100px] md:h-[130px] rounded-2xl overflow-hidden shadow-elegant touch-lift group">
+                <img 
+                  src={heroImage} 
+                  alt="Wedding moment" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                />
+              </div>
+            </div>
 
-          {/* Bottom photos */}
-          <div className="photo-item col-span-4">
-            <div className="photo-frame photo-frame-rounded h-28 md:h-36 overflow-hidden touch-lift">
-              <img src={heroImage} alt="Bouquet" className="w-full h-full object-cover" />
+            <div className="photo-item">
+              <div className="relative h-[100px] md:h-[130px] rounded-2xl overflow-hidden shadow-elegant touch-lift group">
+                <img 
+                  src={heroImage} 
+                  alt="Wedding detail" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                />
+              </div>
+            </div>
+
+            <div className="photo-item">
+              <div className="relative h-[100px] md:h-[130px] rounded-2xl overflow-hidden shadow-elegant touch-lift group">
+                <img 
+                  src={heroImage} 
+                  alt="Wedding moment" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                />
+              </div>
             </div>
           </div>
         </div>
