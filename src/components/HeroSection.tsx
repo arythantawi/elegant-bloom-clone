@@ -425,7 +425,7 @@ const HeroSection = ({
               src={heroPhoto2}
               alt="Our moments"
               caption="After Engagement 2025"
-              location="Surabaya"
+              location="Gartenhütte. Kaffee und Aussicht - Trawas"
               rotation="left"
             />
             
