@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import heroPhoto1 from "@/assets/hero-photo-1.png";
@@ -11,6 +11,171 @@ gsap.registerPlugin(ScrollTrigger);
 interface HeroSectionProps {
   guestName?: string;
 }
+
+interface PhotoWithCaptionProps {
+  src: string;
+  alt: string;
+  caption: string;
+  location: string;
+  isMain?: boolean;
+  rotation?: "left" | "right" | "none";
+}
+
+const PhotoWithCaption = ({
+  src,
+  alt,
+  caption,
+  location,
+  isMain = false,
+  rotation = "none",
+}: PhotoWithCaptionProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const captionRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseEnter = useCallback(() => {
+    if (captionRef.current) {
+      gsap.to(captionRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power3.out",
+      });
+      gsap.to(captionRef.current.querySelector(".caption-bg"), {
+        scaleY: 1,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+      gsap.to(captionRef.current.querySelectorAll(".caption-text"), {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        delay: 0.15,
+        ease: "power2.out",
+      });
+    }
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (captionRef.current) {
+      gsap.to(captionRef.current.querySelectorAll(".caption-text"), {
+        opacity: 0,
+        y: 8,
+        duration: 0.3,
+        stagger: 0.05,
+        ease: "power2.in",
+      });
+      gsap.to(captionRef.current.querySelector(".caption-bg"), {
+        scaleY: 0,
+        duration: 0.4,
+        delay: 0.1,
+        ease: "power2.in",
+      });
+      gsap.to(captionRef.current, {
+        opacity: 0,
+        y: 10,
+        duration: 0.4,
+        delay: 0.15,
+        ease: "power2.in",
+      });
+    }
+  }, []);
+
+  const rotationClass =
+    rotation === "left"
+      ? "-rotate-3 hover:rotate-0"
+      : rotation === "right"
+      ? "rotate-3 hover:rotate-0"
+      : "";
+
+  if (isMain) {
+    return (
+      <div
+        ref={containerRef}
+        className="photo-item relative"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="relative w-64 h-80 md:w-80 md:h-96 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-cream/50 transform hover:scale-[1.02] transition-all duration-500">
+          <div className="absolute inset-0 bg-gradient-to-t from-dusty-rose/20 via-transparent to-sage-green/10 z-10 pointer-events-none" />
+          <img src={src} alt={alt} className="w-full h-full object-cover" />
+          {/* Caption overlay */}
+          <div
+            ref={captionRef}
+            className="absolute bottom-0 left-0 right-0 z-20 opacity-0 translate-y-3"
+          >
+            <div className="caption-bg absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/50 to-transparent origin-bottom scale-y-0" />
+            <div className="relative p-4 md:p-6 text-center">
+              <p className="caption-text font-script text-xl md:text-2xl text-cream opacity-0 translate-y-2">
+                {caption}
+              </p>
+              <p className="caption-text text-xs md:text-sm text-cream/80 tracking-widest uppercase mt-1 opacity-0 translate-y-2">
+                {location}
+              </p>
+            </div>
+          </div>
+        </div>
+        {/* Decorative elements */}
+        <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-dusty-rose/60 rounded-tl-lg" />
+        <div className="absolute -top-3 -right-3 w-6 h-6 border-t-2 border-r-2 border-dusty-rose/60 rounded-tr-lg" />
+        <div className="absolute -bottom-3 -left-3 w-6 h-6 border-b-2 border-l-2 border-sage-green/60 rounded-bl-lg" />
+        <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-sage-green/60 rounded-br-lg" />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="photo-item relative group"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div
+        className={`relative w-36 h-44 md:w-44 md:h-56 rounded-2xl overflow-hidden shadow-xl border-2 border-cream/40 transform ${rotationClass} transition-all duration-500 group-hover:shadow-2xl`}
+      >
+        <div
+          className={`absolute inset-0 ${
+            rotation === "left"
+              ? "bg-gradient-to-br from-sage-green/15"
+              : "bg-gradient-to-bl from-dusty-rose/15"
+          } to-transparent z-10 pointer-events-none`}
+        />
+        <img
+          src={src}
+          alt={alt}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        />
+        {/* Caption overlay */}
+        <div
+          ref={captionRef}
+          className="absolute bottom-0 left-0 right-0 z-20 opacity-0 translate-y-2"
+        >
+          <div className="caption-bg absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-transparent origin-bottom scale-y-0" />
+          <div className="relative p-3 text-center">
+            <p className="caption-text font-script text-base md:text-lg text-cream opacity-0 translate-y-2">
+              {caption}
+            </p>
+            <p className="caption-text text-[10px] md:text-xs text-cream/80 tracking-wider uppercase mt-0.5 opacity-0 translate-y-2">
+              {location}
+            </p>
+          </div>
+        </div>
+      </div>
+      {/* Floating sparkle */}
+      <div
+        className={`absolute ${
+          rotation === "left" ? "-top-2 -right-2" : "-bottom-2 -left-2"
+        } w-4 h-4 ${
+          rotation === "left" ? "text-dusty-rose" : "text-sage-green"
+        } opacity-60`}
+      >
+        ✦
+      </div>
+    </div>
+  );
+};
+
 const HeroSection = ({
   guestName
 }: HeroSectionProps) => {
@@ -245,51 +410,33 @@ const HeroSection = ({
         {/* Aesthetic 3-Photo Gallery */}
         <div ref={galleryRef} className="flex flex-col items-center gap-6 max-w-3xl mx-auto mb-10">
           {/* Main Center Photo - Large with elegant frame */}
-          <div className="photo-item relative">
-            <div className="relative w-64 h-80 md:w-80 md:h-96 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-cream/50 transform hover:scale-[1.02] transition-all duration-500">
-              <div className="absolute inset-0 bg-gradient-to-t from-dusty-rose/20 via-transparent to-sage-green/10 z-10" />
-              <img 
-                src={heroPhoto1} 
-                alt="Oky & Mita" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* Decorative elements */}
-            <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-dusty-rose/60 rounded-tl-lg" />
-            <div className="absolute -top-3 -right-3 w-6 h-6 border-t-2 border-r-2 border-dusty-rose/60 rounded-tr-lg" />
-            <div className="absolute -bottom-3 -left-3 w-6 h-6 border-b-2 border-l-2 border-sage-green/60 rounded-bl-lg" />
-            <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-sage-green/60 rounded-br-lg" />
-          </div>
+          <PhotoWithCaption
+            src={heroPhoto1}
+            alt="Oky & Mita"
+            caption="Our Beginning"
+            location="Jakarta, Indonesia"
+            isMain
+          />
           
           {/* Two Side Photos */}
           <div className="flex gap-4 md:gap-6">
             {/* Left Photo - Rotated slightly */}
-            <div className="photo-item relative group">
-              <div className="relative w-36 h-44 md:w-44 md:h-56 rounded-2xl overflow-hidden shadow-xl border-2 border-cream/40 transform -rotate-3 hover:rotate-0 transition-all duration-500 group-hover:shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-sage-green/15 to-transparent z-10" />
-                <img 
-                  src={heroPhoto2} 
-                  alt="Our moments" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-              </div>
-              {/* Floating sparkle */}
-              <div className="absolute -top-2 -right-2 w-4 h-4 text-dusty-rose opacity-60">✦</div>
-            </div>
+            <PhotoWithCaption
+              src={heroPhoto2}
+              alt="Our moments"
+              caption="Sweet Memories"
+              location="Bandung"
+              rotation="left"
+            />
             
             {/* Right Photo - Rotated opposite */}
-            <div className="photo-item relative group">
-              <div className="relative w-36 h-44 md:w-44 md:h-56 rounded-2xl overflow-hidden shadow-xl border-2 border-cream/40 transform rotate-3 hover:rotate-0 transition-all duration-500 group-hover:shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-bl from-dusty-rose/15 to-transparent z-10" />
-                <img 
-                  src={heroPhoto3} 
-                  alt="Together forever" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-              </div>
-              {/* Floating sparkle */}
-              <div className="absolute -bottom-2 -left-2 w-4 h-4 text-sage-green opacity-60">✦</div>
-            </div>
+            <PhotoWithCaption
+              src={heroPhoto3}
+              alt="Together forever"
+              caption="Forever Us"
+              location="Bali"
+              rotation="right"
+            />
           </div>
         </div>
 
