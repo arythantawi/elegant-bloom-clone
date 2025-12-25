@@ -156,7 +156,7 @@ const PhotoWithCaption = ({
             <p className="caption-text font-script text-base md:text-lg text-cream opacity-0 translate-y-2">
               {caption}
             </p>
-            <p className="caption-text text-[10px] md:text-xs text-cream/80 tracking-wider uppercase mt-0.5 opacity-0 translate-y-2">
+            <p className="caption-text text-[8px] md:text-[10px] text-cream/80 tracking-wide mt-0.5 opacity-0 translate-y-2 leading-tight">
               {location}
             </p>
           </div>
