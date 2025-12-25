@@ -5,9 +5,7 @@ import FloralDecoration from "./FloralDecoration";
 import SparklesDecoration from "./SparklesDecoration";
 import couple1 from "@/assets/couple-1.jpg";
 import couple2 from "@/assets/couple-2.jpg";
-
 gsap.registerPlugin(ScrollTrigger);
-
 const CoupleSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -15,91 +13,90 @@ const CoupleSection = () => {
   const dividerRef = useRef<HTMLDivElement>(null);
   const groomRef = useRef<HTMLDivElement>(null);
   const brideRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Header animations with smooth scrub
-      gsap.fromTo(headerRef.current, 
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            end: "top 50%",
-            toggleActions: "play none none reverse",
-          },
+      gsap.fromTo(headerRef.current, {
+        y: 40,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          end: "top 50%",
+          toggleActions: "play none none reverse"
         }
-      );
-
-      gsap.fromTo(titleRef.current, 
-        { scale: 0.85, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 1,
-          ease: "back.out(1.7)",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-            toggleActions: "play none none reverse",
-          },
+      });
+      gsap.fromTo(titleRef.current, {
+        scale: 0.85,
+        opacity: 0
+      }, {
+        scale: 1,
+        opacity: 1,
+        duration: 1,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          toggleActions: "play none none reverse"
         }
-      );
-
-      gsap.fromTo(dividerRef.current, 
-        { scaleX: 0, opacity: 0 },
-        {
-          scaleX: 1,
-          opacity: 1,
-          duration: 1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            toggleActions: "play none none reverse",
-          },
+      });
+      gsap.fromTo(dividerRef.current, {
+        scaleX: 0,
+        opacity: 0
+      }, {
+        scaleX: 1,
+        opacity: 1,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+          toggleActions: "play none none reverse"
         }
-      );
+      });
 
       // Groom card slide in from left with parallax
-      gsap.fromTo(groomRef.current,
-        { x: -100, opacity: 0, rotateY: 15 },
-        {
-          x: 0,
-          opacity: 1,
-          rotateY: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: groomRef.current,
-            start: "top 85%",
-            end: "top 50%",
-            toggleActions: "play none none reverse",
-          },
+      gsap.fromTo(groomRef.current, {
+        x: -100,
+        opacity: 0,
+        rotateY: 15
+      }, {
+        x: 0,
+        opacity: 1,
+        rotateY: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: groomRef.current,
+          start: "top 85%",
+          end: "top 50%",
+          toggleActions: "play none none reverse"
         }
-      );
+      });
 
       // Bride card slide in from right with parallax
-      gsap.fromTo(brideRef.current,
-        { x: 100, opacity: 0, rotateY: -15 },
-        {
-          x: 0,
-          opacity: 1,
-          rotateY: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: brideRef.current,
-            start: "top 85%",
-            end: "top 50%",
-            toggleActions: "play none none reverse",
-          },
+      gsap.fromTo(brideRef.current, {
+        x: 100,
+        opacity: 0,
+        rotateY: -15
+      }, {
+        x: 0,
+        opacity: 1,
+        rotateY: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: brideRef.current,
+          start: "top 85%",
+          end: "top 50%",
+          toggleActions: "play none none reverse"
         }
-      );
+      });
 
       // Subtle floating animation on cards
       gsap.to([groomRef.current, brideRef.current], {
@@ -108,20 +105,12 @@ const CoupleSection = () => {
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-        stagger: 0.5,
+        stagger: 0.5
       });
-
     }, sectionRef);
-
     return () => ctx.revert();
   }, []);
-
-  return (
-    <section
-      ref={sectionRef}
-      id="couple-section"
-      className="py-24 bg-gradient-to-b from-cream via-warm-cream/50 to-cream relative overflow-hidden"
-    >
+  return <section ref={sectionRef} id="couple-section" className="py-24 bg-gradient-to-b from-cream via-warm-cream/50 to-cream relative overflow-hidden">
       {/* Floral decorations */}
       <FloralDecoration position="left" size="sm" className="opacity-60" variant={3} />
       <FloralDecoration position="right" size="sm" className="opacity-60" variant={4} />
@@ -142,16 +131,8 @@ const CoupleSection = () => {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto perspective-1000">
           {/* Groom Card */}
           <figure ref={groomRef} className="profile-card group">
-            <img
-              src={couple1}
-              alt="Oky Dwi Prasetyo"
-              className="profile-card-bg"
-            />
-            <img
-              src={couple1}
-              alt="Oky Dwi Prasetyo"
-              className="profile-card-avatar"
-            />
+            <img src={couple1} alt="Oky Dwi Prasetyo" className="profile-card-bg" />
+            <img alt="Oky Dwi Prasetyo" className="profile-card-avatar" src="/lovable-uploads/49287dc2-9dcc-473f-a930-a68c6e56bf12.webp" />
             <figcaption className="profile-card-caption">
               <h3 className="profile-card-name">
                 Oky Dwi Prasetyo, S.Kom
@@ -167,16 +148,8 @@ const CoupleSection = () => {
 
           {/* Bride Card */}
           <figure ref={brideRef} className="profile-card group">
-            <img
-              src={couple2}
-              alt="Mita Berliana"
-              className="profile-card-bg"
-            />
-            <img
-              src={couple2}
-              alt="Mita Berliana"
-              className="profile-card-avatar"
-            />
+            <img src={couple2} alt="Mita Berliana" className="profile-card-bg" />
+            <img src={couple2} alt="Mita Berliana" className="profile-card-avatar" />
             <figcaption className="profile-card-caption">
               <h3 className="profile-card-name">
                 Mita Berliana, S.Si, M.Si
@@ -191,8 +164,6 @@ const CoupleSection = () => {
           </figure>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default CoupleSection;
