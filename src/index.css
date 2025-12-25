@@ -737,9 +737,3 @@
     transform: rotate(-1deg);
   }
 }
-
-/* Handwritten SVG Path Animation */
-.path {
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
