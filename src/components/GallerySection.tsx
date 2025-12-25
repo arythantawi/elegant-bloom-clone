@@ -2,10 +2,12 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import couple1 from "@/assets/couple-1.jpg";
-import couple2 from "@/assets/couple-2.jpg";
-import venue from "@/assets/venue.jpg";
-import hero from "@/assets/hero-wedding.jpg";
-import couplePrewedding from "@/assets/couple-prewedding.png";
+import gallery2 from "@/assets/gallery-2.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery4 from "@/assets/gallery-4.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
+import gallery6 from "@/assets/gallery-6.jpg";
+import gallery7 from "@/assets/gallery-7.jpg";
 import FloralDecoration from "./FloralDecoration";
 import SparklesDecoration from "./SparklesDecoration";
 
@@ -20,13 +22,12 @@ const GallerySection = () => {
 
   const galleryImages = [
     { src: couple1, alt: "Oky dan Mita - Foto 1", caption: "Our First Meeting" },
-    { src: couple2, alt: "Oky dan Mita - Foto 2", caption: "Love Blossoms" },
-    { src: couplePrewedding, alt: "Pre-wedding", caption: "Pre-Wedding" },
-    { src: venue, alt: "Venue pernikahan", caption: "Our Special Day" },
-    { src: hero, alt: "Dekorasi pernikahan", caption: "Beautiful Moments" },
-    { src: couple1, alt: "Oky dan Mita - Foto 3", caption: "Together Forever" },
-    { src: couple2, alt: "Oky dan Mita - Foto 4", caption: "Sweet Memories" },
-    { src: couplePrewedding, alt: "Pre-wedding 2", caption: "Happiness" },
+    { src: gallery2, alt: "Oky dan Mita - Foto 2", caption: "Love Blossoms" },
+    { src: gallery3, alt: "Oky dan Mita - Foto 3", caption: "Pre-Wedding" },
+    { src: gallery4, alt: "Oky dan Mita - Foto 4", caption: "Our Special Day" },
+    { src: gallery5, alt: "Oky dan Mita - Foto 5", caption: "Beautiful Moments" },
+    { src: gallery6, alt: "Oky dan Mita - Foto 6", caption: "Together Forever" },
+    { src: gallery7, alt: "Oky dan Mita - Foto 7", caption: "Sweet Memories" },
   ];
 
   useEffect(() => {
