@@ -203,18 +203,19 @@ const AnimatedTitle = ({
         // Set initial state only when we are about to animate (prevents "stuck invisible" state)
         gsap.set(letters, {
           autoAlpha: 0,
-          yPercent: 140,
-          scale: 0.35,
+          yPercent: 80,
+          scale: 0.9,
           transformOrigin: "50% 100%",
+          willChange: "transform,opacity",
         });
 
         gsap.to(letters, {
           autoAlpha: 1,
           yPercent: 0,
           scale: 1,
-          duration: 1.15,
-          stagger: 0.09,
-          ease: "elastic.out(1.4, 0.35)",
+          duration: 1.05,
+          stagger: 0.05,
+          ease: "back.out(1.15)",
           delay: staggerDelay,
           overwrite: "auto",
         });
