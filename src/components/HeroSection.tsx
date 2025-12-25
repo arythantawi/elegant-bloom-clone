@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import heroPhoto1 from "@/assets/hero-photo-1.png";
@@ -177,63 +177,78 @@ const PhotoWithCaption = ({
 };
 
 // Letter animation component
-const AnimatedTitle = ({ text, colorClass, delay = 0 }: { text: string; colorClass: string; delay?: number }) => {
+const AnimatedTitle = ({
+  text,
+  colorClass,
+  delay = 0,
+}: {
+  text: string;
+  colorClass: string;
+  delay?: number;
+}) => {
   const containerRef = useRef<HTMLSpanElement>(null);
-  const [isAnimated, setIsAnimated] = useState(false);
 
-  useEffect(() => {
-    if (containerRef.current && !isAnimated) {
-      const letters = containerRef.current.querySelectorAll('.letter');
-      
-      // Set initial state - hidden
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const letters = gsap.utils.toArray<HTMLElement>(".letter");
+
+      // Start hidden so we never miss the stagger (especially while parent is animating in)
       gsap.set(letters, {
-        opacity: 0,
-        y: 100,
-        scale: 0.5,
+        autoAlpha: 0,
+        yPercent: 140,
+        scale: 0.35,
+        transformOrigin: "50% 100%",
       });
 
-      // Animate in with stagger and strong bounce
       gsap.to(letters, {
-        opacity: 1,
-        y: 0,
+        autoAlpha: 1,
+        yPercent: 0,
         scale: 1,
-        duration: 0.9,
-        stagger: 0.08,
-        ease: "elastic.out(1.2, 0.5)",
-        delay: delay,
-        onComplete: () => setIsAnimated(true),
+        duration: 1.15,
+        stagger: 0.09,
+        ease: "elastic.out(1.4, 0.35)",
+        delay,
+        overwrite: "auto",
       });
-    }
-  }, [delay, isAnimated]);
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [delay, text]);
 
   return (
-    <span 
-      ref={containerRef} 
+    <span
+      ref={containerRef}
       className={`title-line block relative ${colorClass}`}
-      style={{ 
-        transform: 'translateX(-50%) rotate(-10deg)',
-        left: '50%',
+      style={{
+        transform: "translateX(-50%) rotate(-10deg)",
+        left: "50%",
       }}
     >
-      {text.split('').map((char, index) => (
+      {text.split("").map((char, index) => (
         <span
           key={index}
           className="letter inline-block relative"
-          style={{
-            transform: 'skew(-10deg)',
-            textShadow: `
-              hsl(var(--foreground) / 0.2) 1px 1px,
-              hsl(var(--foreground) / 0.18) 2px 2px,
-              hsl(var(--foreground) / 0.15) 3px 3px,
-              hsl(var(--foreground) / 0.12) 4px 4px,
-              hsl(var(--foreground) / 0.1) 5px 5px,
-              hsl(var(--foreground) / 0.08) 6px 6px
-            `,
-            minWidth: char === ' ' ? '0.3em' : 'auto',
-            minHeight: '10px',
-          }}
+          style={{ minWidth: char === " " ? "0.3em" : "auto" }}
         >
-          {char === ' ' ? '\u00A0' : char}
+          <span
+            className="inline-block relative"
+            style={{
+              transform: "skew(-10deg)",
+              textShadow: `
+                hsl(var(--foreground) / 0.2) 1px 1px,
+                hsl(var(--foreground) / 0.18) 2px 2px,
+                hsl(var(--foreground) / 0.15) 3px 3px,
+                hsl(var(--foreground) / 0.12) 4px 4px,
+                hsl(var(--foreground) / 0.1) 5px 5px,
+                hsl(var(--foreground) / 0.08) 6px 6px
+              `,
+              minHeight: "10px",
+            }}
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
         </span>
       ))}
     </span>
@@ -444,8 +459,8 @@ const HeroSection = ({
         {/* Main Tagline */}
         <div ref={taglineRef} className="mb-8">
           <h1 className="font-script text-5xl md:text-7xl lg:text-8xl mb-4 max-w-[280px] md:max-w-[400px] mx-auto">
-            <AnimatedTitle text="Dua Hati" colorClass="text-dusty-rose" delay={0.5} />
-            <AnimatedTitle text="Satu Cerita" colorClass="text-sage-green" delay={1.2} />
+            <AnimatedTitle text="Dua Hati" colorClass="text-dusty-rose" delay={1.4} />
+            <AnimatedTitle text="Satu Cerita" colorClass="text-sage-green" delay={2.5} />
           </h1>
         </div>
 
