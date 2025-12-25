@@ -188,16 +188,18 @@ const AnimatedTitle = ({ text, colorClass, delay = 0 }: { text: string; colorCla
       // Set initial state - hidden
       gsap.set(letters, {
         opacity: 0,
-        y: 80,
+        y: 100,
+        scale: 0.5,
       });
 
-      // Animate in with stagger
+      // Animate in with stagger and strong bounce
       gsap.to(letters, {
         opacity: 1,
         y: 0,
-        duration: 0.7,
+        scale: 1,
+        duration: 0.9,
         stagger: 0.08,
-        ease: "back.out(1.7)",
+        ease: "elastic.out(1.2, 0.5)",
         delay: delay,
         onComplete: () => setIsAnimated(true),
       });
