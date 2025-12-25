@@ -98,6 +98,30 @@ const HeroSection = ({ guestName }: HeroSectionProps) => {
         yoyo: true,
         ease: "sine.inOut"
       });
+
+      // Parallax effect on scroll
+      gsap.to(taglineRef.current, {
+        y: -30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.5,
+        }
+      });
+
+      gsap.to(galleryRef.current, {
+        y: -20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.5,
+        }
+      });
+
     }, sectionRef);
 
     return () => ctx.revert();

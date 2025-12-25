@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import FloralDecoration from "./FloralDecoration";
 import SparklesDecoration from "./SparklesDecoration";
-import { GoldenFloral, FloralSide6, FloralExposure } from "./FloralDecorations";
+import { GoldenFloral, FloralSide6 } from "./FloralDecorations";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,10 +16,104 @@ const LoveStorySection = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(headerRef.current, { y: -30, opacity: 0, duration: 0.6, ease: "power3.out", scrollTrigger: { trigger: sectionRef.current, start: "top 80%", toggleActions: "play none none none" } });
-      gsap.from(titleRef.current, { scale: 0.9, opacity: 0, duration: 0.7, delay: 0.1, ease: "back.out(1.7)", scrollTrigger: { trigger: sectionRef.current, start: "top 80%", toggleActions: "play none none none" } });
-      gsap.from(dividerRef.current, { width: 0, opacity: 0, duration: 0.6, delay: 0.2, ease: "power2.out", scrollTrigger: { trigger: sectionRef.current, start: "top 80%", toggleActions: "play none none none" } });
+      // Header animations
+      gsap.fromTo(headerRef.current, 
+        { y: 40, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "power3.out", 
+          scrollTrigger: { 
+            trigger: sectionRef.current, 
+            start: "top 80%", 
+            toggleActions: "play none none reverse" 
+          } 
+        }
+      );
+
+      gsap.fromTo(titleRef.current, 
+        { scale: 0.85, opacity: 0 },
+        { 
+          scale: 1, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "back.out(1.7)", 
+          scrollTrigger: { 
+            trigger: sectionRef.current, 
+            start: "top 75%", 
+            toggleActions: "play none none reverse" 
+          } 
+        }
+      );
+
+      gsap.fromTo(dividerRef.current, 
+        { scaleX: 0, opacity: 0 },
+        { 
+          scaleX: 1, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "power2.out", 
+          scrollTrigger: { 
+            trigger: sectionRef.current, 
+            start: "top 70%", 
+            toggleActions: "play none none reverse" 
+          } 
+        }
+      );
+
+      // Timeline items with stagger
+      if (timelineRef.current) {
+        const items = timelineRef.current.querySelectorAll('.timeline-item');
+        const dots = timelineRef.current.querySelectorAll('.timeline-dot');
+        
+        items.forEach((item, index) => {
+          gsap.fromTo(item,
+            { x: index % 2 === 0 ? -60 : 60, opacity: 0 },
+            {
+              x: 0,
+              opacity: 1,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        });
+
+        // Timeline dots pop in
+        gsap.fromTo(dots,
+          { scale: 0, opacity: 0 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.2,
+            ease: "back.out(2)",
+            scrollTrigger: {
+              trigger: timelineRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+
+        // Pulse animation on dots
+        gsap.to(dots, {
+          scale: 1.2,
+          duration: 1.5,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          stagger: 0.3,
+        });
+      }
+
     }, sectionRef);
+
     return () => ctx.revert();
   }, []);
 
@@ -42,7 +136,7 @@ const LoveStorySection = () => {
         <div className="text-center mb-16">
           <p ref={headerRef} className="font-display text-lg tracking-[0.2em] text-muted-foreground mb-4 uppercase">Perjalanan Cinta Kami</p>
           <h2 ref={titleRef} className="font-script text-5xl md:text-6xl mb-6"><span className="text-dusty-rose">Kisah</span> <span className="text-sage-green">Kami</span></h2>
-          <div ref={dividerRef} className="section-divider w-24 mx-auto" />
+          <div ref={dividerRef} className="section-divider w-24 mx-auto origin-center" />
         </div>
 
         <div ref={timelineRef} className="relative pl-8 border-l-2 border-dusty-rose/30">
