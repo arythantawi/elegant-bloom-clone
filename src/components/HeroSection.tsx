@@ -6,14 +6,13 @@ import coupleImage from "@/assets/couple-1.jpg";
 import FloralDecoration from "./FloralDecoration";
 import SparklesDecoration from "./SparklesDecoration";
 import { FloralSide4, Floral5, FloralExposure, GoldenFloral } from "./FloralDecorations";
-
 gsap.registerPlugin(ScrollTrigger);
-
 interface HeroSectionProps {
   guestName?: string;
 }
-
-const HeroSection = ({ guestName }: HeroSectionProps) => {
+const HeroSection = ({
+  guestName
+}: HeroSectionProps) => {
   const sectionRef = useRef<HTMLElement>(null);
   const taglineRef = useRef<HTMLDivElement>(null);
   const dateRef = useRef<HTMLDivElement>(null);
@@ -22,7 +21,6 @@ const HeroSection = ({ guestName }: HeroSectionProps) => {
   const guestRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const floralsRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -107,10 +105,9 @@ const HeroSection = ({ guestName }: HeroSectionProps) => {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 1.5,
+          scrub: 1.5
         }
       });
-
       gsap.to(galleryRef.current, {
         y: -20,
         ease: "none",
@@ -118,26 +115,22 @@ const HeroSection = ({ guestName }: HeroSectionProps) => {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 1.5,
+          scrub: 1.5
         }
       });
-
     }, sectionRef);
-
     return () => ctx.revert();
   }, []);
-
-  return (
-    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cream">
+  return <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cream">
       {/* Background with soft texture */}
       <div className="absolute inset-0 bg-gradient-to-b from-cream via-warm-cream to-cream opacity-90" />
 
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-30" style={{
-        backgroundImage: `radial-gradient(circle at 20% 50%, hsl(10, 35%, 72%, 0.15) 0%, transparent 50%),
+      backgroundImage: `radial-gradient(circle at 20% 50%, hsl(10, 35%, 72%, 0.15) 0%, transparent 50%),
                           radial-gradient(circle at 80% 30%, hsl(100, 20%, 50%, 0.1) 0%, transparent 40%),
                           radial-gradient(circle at 60% 80%, hsl(10, 35%, 72%, 0.1) 0%, transparent 45%)`
-      }} />
+    }} />
 
       {/* Floral Decorations */}
       <div ref={floralsRef}>
@@ -206,9 +199,7 @@ const HeroSection = ({ guestName }: HeroSectionProps) => {
 
           {/* Circle photo */}
           <div className="photo-item col-span-3">
-            <div className="photo-frame photo-frame-circle w-24 h-24 md:w-28 md:h-28 mx-auto overflow-hidden touch-lift">
-              <img src={heroImage} alt="Wedding rings" className="w-full h-full object-cover" />
-            </div>
+            
           </div>
 
           {/* Bottom photos */}
@@ -220,14 +211,12 @@ const HeroSection = ({ guestName }: HeroSectionProps) => {
         </div>
 
         {/* Guest Name */}
-        {guestName && (
-          <div ref={guestRef} className="mt-8">
+        {guestName && <div ref={guestRef} className="mt-8">
             <p className="text-muted-foreground text-sm tracking-widest uppercase mb-2">Kepada Yth.</p>
             <p className="font-script text-3xl md:text-4xl text-dusty-rose">
               {guestName}
             </p>
-          </div>
-        )}
+          </div>}
 
         {/* Scroll Indicator */}
         <div ref={scrollIndicatorRef} className="absolute bottom-8 left-1/2 -translate-x-1/2">
@@ -235,8 +224,6 @@ const HeroSection = ({ guestName }: HeroSectionProps) => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HeroSection;
