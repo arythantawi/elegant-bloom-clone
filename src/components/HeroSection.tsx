@@ -176,15 +176,15 @@ const PhotoWithCaption = ({
   );
 };
 
-// Letter animation component
+// Letter animation component with ScrollTrigger
 const AnimatedTitle = ({
   text,
   colorClass,
-  delay = 0,
+  staggerDelay = 0,
 }: {
   text: string;
   colorClass: string;
-  delay?: number;
+  staggerDelay?: number;
 }) => {
   const containerRef = useRef<HTMLSpanElement>(null);
 
@@ -194,7 +194,7 @@ const AnimatedTitle = ({
     const ctx = gsap.context(() => {
       const letters = gsap.utils.toArray<HTMLElement>(".letter");
 
-      // Start hidden so we never miss the stagger (especially while parent is animating in)
+      // Start hidden
       gsap.set(letters, {
         autoAlpha: 0,
         yPercent: 140,
@@ -202,6 +202,7 @@ const AnimatedTitle = ({
         transformOrigin: "50% 100%",
       });
 
+      // Animate with ScrollTrigger
       gsap.to(letters, {
         autoAlpha: 1,
         yPercent: 0,
@@ -209,13 +210,18 @@ const AnimatedTitle = ({
         duration: 1.15,
         stagger: 0.09,
         ease: "elastic.out(1.4, 0.35)",
-        delay,
+        delay: staggerDelay,
         overwrite: "auto",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
       });
     }, containerRef);
 
     return () => ctx.revert();
-  }, [delay, text]);
+  }, [staggerDelay, text]);
 
   return (
     <span
@@ -459,8 +465,8 @@ const HeroSection = ({
         {/* Main Tagline */}
         <div ref={taglineRef} className="mb-8">
           <h1 className="font-script text-5xl md:text-7xl lg:text-8xl mb-4 max-w-[280px] md:max-w-[400px] mx-auto">
-            <AnimatedTitle text="Dua Hati" colorClass="text-dusty-rose" delay={1.4} />
-            <AnimatedTitle text="Satu Cerita" colorClass="text-sage-green" delay={2.5} />
+            <AnimatedTitle text="Dua Hati" colorClass="text-dusty-rose" staggerDelay={0} />
+            <AnimatedTitle text="Satu Cerita" colorClass="text-sage-green" staggerDelay={0.6} />
           </h1>
         </div>
 
