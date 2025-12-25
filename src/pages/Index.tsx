@@ -1,13 +1,47 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import HeroSection from "@/components/HeroSection";
+import CoupleSection from "@/components/CoupleSection";
+import CountdownSection from "@/components/CountdownSection";
+import LoveStorySection from "@/components/LoveStorySection";
+import EventSection from "@/components/EventSection";
+import GallerySection from "@/components/GallerySection";
+import GiftSection from "@/components/GiftSection";
+import RSVPSection from "@/components/RSVPSection";
+import FooterSection from "@/components/FooterSection";
+import EnvelopeOpening from "@/components/EnvelopeOpening";
 
 const Index = () => {
+  const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const guestName = searchParams.get("to")?.replace(/_/g, " ") || undefined;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {!isEnvelopeOpened && (
+        <EnvelopeOpening
+          onOpen={() => setIsEnvelopeOpened(true)}
+          guestName={guestName}
+        />
+      )}
+
+      <main
+        className={`min-h-screen bg-cream transition-opacity duration-700 ${
+          isEnvelopeOpened ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <HeroSection guestName={guestName} />
+        <CoupleSection />
+        <CountdownSection />
+        <LoveStorySection />
+        <EventSection />
+        <GallerySection />
+        <GiftSection />
+        <RSVPSection />
+        <FooterSection />
+      </main>
+    </>
   );
 };
 
