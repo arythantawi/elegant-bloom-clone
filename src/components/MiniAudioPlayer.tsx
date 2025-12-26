@@ -32,6 +32,12 @@ const defaultPlaylist: AudioFile[] = [
     "record-art": "/images/tulus-cover.png"
   },
   {
+    title: "It's You",
+    artist: "Raisa",
+    url: "/audio/raisa-its-you.mp3",
+    "record-art": "/images/raisa-cover.jpg"
+  },
+  {
     title: "Denganmu",
     artist: "Arsy Widianto",
     url: "/audio/arsy-widianto-denganmu.mp3"
