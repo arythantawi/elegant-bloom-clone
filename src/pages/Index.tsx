@@ -16,6 +16,18 @@ const Index = () => {
   const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(false);
   const { guestName, isLoading } = useGuestName();
 
+  // Wait for guest name to load before showing envelope
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-cream flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-dusty-rose border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground font-display text-sm tracking-widest">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       {!isEnvelopeOpened && (
