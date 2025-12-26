@@ -57,7 +57,21 @@ const MiniAudioPlayer = ({
   const [duration, setDuration] = useState(0);
   const [isLooping, setIsLooping] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [recordArt, setRecordArt] = useState(playlist[0]?.["record-art"] || defaultRecordArt);
+
+  // Use refs for values needed in event handlers to avoid stale closures
+  const autoPlayRef = useRef(autoPlay);
+  const currentIndexRef = useRef(currentIndex);
+
+  // Keep refs in sync with state
+  useEffect(() => {
+    autoPlayRef.current = autoPlay;
+  }, [autoPlay]);
+
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
 
   const currentTrack = playlist[currentIndex];
 
@@ -73,68 +87,131 @@ const MiniAudioPlayer = ({
       setCurrentIndex(index);
       const track = playlist[index];
       setRecordArt(track["record-art"] || defaultRecordArt);
+      setIsLoading(true);
+      
       if (audioRef.current) {
         audioRef.current.src = track.url;
         audioRef.current.load();
-        audioRef.current.play().catch(() => {});
-        setIsPlaying(true);
+        
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+              setIsLoading(false);
+            })
+            .catch(() => {
+              setIsPlaying(false);
+              setIsLoading(false);
+            });
+        }
       }
     }
-  }, [playlist]);
+  }, [playlist, defaultRecordArt]);
 
-  const togglePlayPause = () => {
+  const playNext = useCallback(() => {
+    const nextIndex = (currentIndexRef.current + 1) % playlist.length;
+    playAtIndex(nextIndex);
+  }, [playlist.length, playAtIndex]);
+
+  const togglePlayPause = useCallback(() => {
     if (!audioRef.current) return;
+    
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().catch(() => {});
-      setIsPlaying(true);
+      setIsLoading(true);
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            setIsLoading(false);
+          })
+          .catch(() => {
+            setIsPlaying(false);
+            setIsLoading(false);
+          });
+      }
     }
-  };
+  }, [isPlaying]);
 
-  const playNext = () => {
-    const nextIndex = (currentIndex + 1) % playlist.length;
-    playAtIndex(nextIndex);
-  };
-
-  const playPrevious = () => {
-    const prevIndex = currentIndex === 0 ? playlist.length - 1 : currentIndex - 1;
+  const playPrevious = useCallback(() => {
+    const prevIndex = currentIndexRef.current === 0 ? playlist.length - 1 : currentIndexRef.current - 1;
     playAtIndex(prevIndex);
-  };
+  }, [playlist.length, playAtIndex]);
 
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!audioRef.current) return;
+  const handleSeek = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!audioRef.current || !duration) return;
     const seekTo = (parseFloat(e.target.value) / 100) * duration;
     audioRef.current.currentTime = seekTo;
     setCurrentTime(seekTo);
-  };
+  }, [duration]);
 
-  const handleEnded = () => {
-    if (autoPlay) {
-      playNext();
-    } else {
-      setIsPlaying(false);
-    }
-  };
-
+  // Setup audio event listeners
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const updateTime = () => setCurrentTime(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
+    const updateDuration = () => {
+      setDuration(audio.duration);
+      setIsLoading(false);
+    };
+    
+    const handleEnded = () => {
+      if (autoPlayRef.current) {
+        const nextIndex = (currentIndexRef.current + 1) % playlist.length;
+        playAtIndex(nextIndex);
+      } else {
+        setIsPlaying(false);
+      }
+    };
+
+    const handleCanPlay = () => {
+      setIsLoading(false);
+    };
+
+    const handleWaiting = () => {
+      setIsLoading(true);
+    };
+
+    const handlePlaying = () => {
+      setIsPlaying(true);
+      setIsLoading(false);
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    const handleError = () => {
+      setIsPlaying(false);
+      setIsLoading(false);
+      console.error("Audio error occurred");
+    };
 
     audio.addEventListener("timeupdate", updateTime);
     audio.addEventListener("loadedmetadata", updateDuration);
     audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("canplay", handleCanPlay);
+    audio.addEventListener("waiting", handleWaiting);
+    audio.addEventListener("playing", handlePlaying);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("error", handleError);
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime);
       audio.removeEventListener("loadedmetadata", updateDuration);
       audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("canplay", handleCanPlay);
+      audio.removeEventListener("waiting", handleWaiting);
+      audio.removeEventListener("playing", handlePlaying);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("error", handleError);
     };
-  }, [autoPlay, currentIndex]);
+  }, [playlist.length, playAtIndex]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -147,30 +224,54 @@ const MiniAudioPlayer = ({
 
   return (
     <div className={`mini-audio-player ${isPlaying ? "playing" : ""} ${isMinimized ? "minimized" : ""}`}>
-      <audio ref={audioRef} src={currentTrack?.url} />
+      <audio 
+        ref={audioRef} 
+        src={currentTrack?.url} 
+        preload="auto"
+      />
       
       {/* Minimize/Expand Button */}
       <button 
         className="minimize-btn"
         onClick={() => setIsMinimized(!isMinimized)}
         title={isMinimized ? "Expand Player" : "Minimize Player"}
+        aria-label={isMinimized ? "Expand Player" : "Minimize Player"}
       >
         {isMinimized ? "♫" : "−"}
       </button>
       
       {/* Spinning Record */}
       <div className="spinning-album">
-        <img src={recordArt} alt="Album Art" className={isPlaying ? "spinning" : ""} />
+        <img 
+          src={recordArt} 
+          alt={`${currentTrack?.title} - ${currentTrack?.artist}`} 
+          className={isPlaying ? "spinning" : ""} 
+          loading="eager"
+        />
+        {isLoading && (
+          <div className="loading-indicator" aria-label="Loading">
+            <span className="loading-spinner" />
+          </div>
+        )}
       </div>
 
       {/* Playlist */}
       <div className="playlist-container">
-        <ul>
+        <ul role="listbox" aria-label="Playlist">
           {playlist.map((track, index) => (
             <li 
-              key={index} 
+              key={`${track.title}-${track.artist}`}
+              role="option"
+              aria-selected={index === currentIndex}
               className={index === currentIndex ? "active" : ""}
               onClick={() => playAtIndex(index)}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  playAtIndex(index);
+                }
+              }}
             >
               <h4>{track.title}</h4>
               <p>{track.artist}</p>
@@ -182,15 +283,34 @@ const MiniAudioPlayer = ({
       {/* Controls */}
       <div className="player-controls">
         <div className="control-buttons">
-          <button onClick={playPrevious} title="Previous">⇤</button>
-          <button onClick={togglePlayPause} className="play-pause-btn">
-            {isPlaying ? "❚❚" : "▶"}
+          <button 
+            onClick={playPrevious} 
+            title="Previous"
+            aria-label="Previous track"
+          >
+            ⇤
           </button>
-          <button onClick={playNext} title="Next">⇥</button>
+          <button 
+            onClick={togglePlayPause} 
+            className="play-pause-btn"
+            aria-label={isPlaying ? "Pause" : "Play"}
+            disabled={isLoading}
+          >
+            {isLoading ? "◌" : isPlaying ? "❚❚" : "▶"}
+          </button>
+          <button 
+            onClick={playNext} 
+            title="Next"
+            aria-label="Next track"
+          >
+            ⇥
+          </button>
           <button 
             onClick={() => setIsLooping(!isLooping)} 
             className={isLooping ? "active" : ""}
             title={isLooping ? "Loop ON" : "Loop OFF"}
+            aria-label={isLooping ? "Disable loop" : "Enable loop"}
+            aria-pressed={isLooping}
           >
             ∞
           </button>
@@ -198,6 +318,8 @@ const MiniAudioPlayer = ({
             onClick={() => setAutoPlay(!autoPlay)} 
             className={autoPlay ? "active" : ""}
             title={autoPlay ? "Autoplay ON" : "Autoplay OFF"}
+            aria-label={autoPlay ? "Disable autoplay" : "Enable autoplay"}
+            aria-pressed={autoPlay}
           >
             ♻
           </button>
@@ -206,9 +328,15 @@ const MiniAudioPlayer = ({
         <div className="seek-container">
           <input
             type="range"
+            min="0"
+            max="100"
             value={progress}
             onChange={handleSeek}
             style={{ background: progressGradient }}
+            aria-label="Seek"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress)}
           />
           <div className="time-display">
             <span>{formatTime(currentTime)}</span>
