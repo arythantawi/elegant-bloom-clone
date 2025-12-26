@@ -55,7 +55,7 @@ const Index = () => {
         <FooterSection />
         
         {/* Mini Audio Player */}
-        {isEnvelopeOpened && <MiniAudioPlayer />}
+        {isEnvelopeOpened && <MiniAudioPlayer autoStart />}
       </main>
     </>
   );
