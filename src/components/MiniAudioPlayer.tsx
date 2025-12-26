@@ -22,25 +22,25 @@ const defaultPlaylist: AudioFile[] = [
   {
     title: "Anugerah Terindah",
     artist: "Andmesh",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    url: "/audio/andmesh-anugerah-terindah.mp3",
     "record-art": "https://tse4.mm.bing.net/th/id/OIP.5gkYgTf6YWl4BRAqNRDZfgHaEK?pid=Api&P=0&h=180"
   },
   {
     title: "Teman Hidup",
     artist: "Tulus",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+    url: "/audio/tulus-teman-hidup.mp3",
     "record-art": "https://images.genius.com/0e1f7461eb12776a27ba6485d9461d56.1000x1000x1.png"
   },
   {
     title: "It's You",
     artist: "Raisa",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+    url: "/audio/raisa-its-you.mp3",
     "record-art": "https://s3.cosmopolitan.co.id/rsz_screen_shot_2022-03-18_at_103310_54_20220318103408uwpgFY.jpg"
   },
   {
     title: "Denganmu",
     artist: "Arsy Widianto",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+    url: "/audio/arsy-widianto-denganmu.mp3",
     "record-art": "https://www.dailysia.com/wp-content/uploads/2024/08/Arsy-Widianto_1.jpg"
   },
   {
