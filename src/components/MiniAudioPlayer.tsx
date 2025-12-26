@@ -27,6 +27,7 @@ const MiniAudioPlayer = ({
 }: MiniAudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -123,8 +124,17 @@ const MiniAudioPlayer = ({
   const progressGradient = `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${progress}%, hsl(var(--muted)) ${progress}%, hsl(var(--muted)) 100%)`;
 
   return (
-    <div className={`mini-audio-player ${isPlaying ? "playing" : ""}`}>
+    <div className={`mini-audio-player ${isPlaying ? "playing" : ""} ${isMinimized ? "minimized" : ""}`}>
       <audio ref={audioRef} src={currentTrack?.url} />
+      
+      {/* Minimize/Expand Button */}
+      <button 
+        className="minimize-btn"
+        onClick={() => setIsMinimized(!isMinimized)}
+        title={isMinimized ? "Expand Player" : "Minimize Player"}
+      >
+        {isMinimized ? "♫" : "−"}
+      </button>
       
       {/* Spinning Record */}
       <div className="spinning-album">
