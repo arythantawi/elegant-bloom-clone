@@ -48,7 +48,7 @@ const MiniAudioPlayer = ({
   const [duration, setDuration] = useState(0);
   const [isLooping, setIsLooping] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
-  const [recordArt, setRecordArt] = useState(defaultRecordArt);
+  const [recordArt, setRecordArt] = useState(playlist[0]?.["record-art"] || defaultRecordArt);
 
   const currentTrack = playlist[currentIndex];
 
