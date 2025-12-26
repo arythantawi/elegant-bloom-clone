@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import HeroSection from "@/components/HeroSection";
 import CoupleSection from "@/components/CoupleSection";
 import CountdownSection from "@/components/CountdownSection";
@@ -11,12 +10,11 @@ import GiftSection from "@/components/GiftSection";
 import RSVPSection from "@/components/RSVPSection";
 import FooterSection from "@/components/FooterSection";
 import EnvelopeOpening from "@/components/EnvelopeOpening";
+import { useGuestName } from "@/hooks/useGuestName";
 
 const Index = () => {
   const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(false);
-  const [searchParams] = useSearchParams();
-
-  const guestName = searchParams.get("to")?.replace(/_/g, " ") || undefined;
+  const { guestName, isLoading } = useGuestName();
 
   return (
     <>
