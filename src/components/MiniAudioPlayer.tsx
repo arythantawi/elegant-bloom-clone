@@ -10,6 +10,7 @@ interface AudioFile {
 interface MiniAudioPlayerProps {
   playlist?: AudioFile[];
   defaultRecordArt?: string;
+  autoStart?: boolean;
 }
 
 const defaultPlaylist: AudioFile[] = [
@@ -47,7 +48,8 @@ const defaultPlaylist: AudioFile[] = [
 
 const MiniAudioPlayer = ({ 
   playlist = defaultPlaylist, 
-  defaultRecordArt = "/images/payung-teduh-cover.jpeg" 
+  defaultRecordArt = "/images/payung-teduh-cover.jpeg",
+  autoStart = false
 }: MiniAudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -58,6 +60,7 @@ const MiniAudioPlayer = ({
   const [isLooping, setIsLooping] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasAutoStarted, setHasAutoStarted] = useState(false);
   const [recordArt, setRecordArt] = useState(playlist[0]?.["record-art"] || defaultRecordArt);
 
   // Use refs for values needed in event handlers to avoid stale closures
@@ -72,6 +75,28 @@ const MiniAudioPlayer = ({
   useEffect(() => {
     currentIndexRef.current = currentIndex;
   }, [currentIndex]);
+
+  // Auto start playback when component mounts
+  useEffect(() => {
+    if (autoStart && !hasAutoStarted && audioRef.current) {
+      setHasAutoStarted(true);
+      setIsLoading(true);
+      
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            setIsLoading(false);
+          })
+          .catch(() => {
+            // Autoplay was prevented by browser, user needs to interact first
+            setIsPlaying(false);
+            setIsLoading(false);
+          });
+      }
+    }
+  }, [autoStart, hasAutoStarted]);
 
   const currentTrack = playlist[currentIndex];
 
