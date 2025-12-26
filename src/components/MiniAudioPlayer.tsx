@@ -22,20 +22,17 @@ const defaultPlaylist: AudioFile[] = [
   {
     title: "Anugerah Terindah",
     artist: "Andmesh",
-    url: "/audio/andmesh-anugerah-terindah.mp3",
-    "record-art": "/images/payung-teduh-cover.jpeg"
+    url: "/audio/andmesh-anugerah-terindah.mp3"
   },
   {
     title: "Teman Hidup",
     artist: "Tulus",
-    url: "/audio/tulus-teman-hidup.mp3",
-    "record-art": "/images/payung-teduh-cover.jpeg"
+    url: "/audio/tulus-teman-hidup.mp3"
   },
   {
     title: "Denganmu",
     artist: "Arsy Widianto",
-    url: "/audio/arsy-widianto-denganmu.mp3",
-    "record-art": "/images/payung-teduh-cover.jpeg"
+    url: "/audio/arsy-widianto-denganmu.mp3"
   }
 ];
 
@@ -66,9 +63,7 @@ const MiniAudioPlayer = ({
     if (index >= 0 && index < playlist.length) {
       setCurrentIndex(index);
       const track = playlist[index];
-      if (track["record-art"]) {
-        setRecordArt(track["record-art"]);
-      }
+      setRecordArt(track["record-art"] || defaultRecordArt);
       if (audioRef.current) {
         audioRef.current.src = track.url;
         audioRef.current.load();
