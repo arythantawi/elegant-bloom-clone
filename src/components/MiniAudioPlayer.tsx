@@ -38,7 +38,7 @@ const defaultPlaylist: AudioFile[] = [
 
 const MiniAudioPlayer = ({ 
   playlist = defaultPlaylist, 
-  defaultRecordArt = "/lovable-uploads/838e7f90-49c0-401d-b3a7-557bc5fdc4b2.png" 
+  defaultRecordArt = "/images/payung-teduh-cover.jpeg" 
 }: MiniAudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
