@@ -10,6 +10,7 @@ import GiftSection from "@/components/GiftSection";
 import RSVPSection from "@/components/RSVPSection";
 import FooterSection from "@/components/FooterSection";
 import EnvelopeOpening from "@/components/EnvelopeOpening";
+import MiniAudioPlayer from "@/components/MiniAudioPlayer";
 import { useGuestName } from "@/hooks/useGuestName";
 
 const Index = () => {
@@ -52,6 +53,9 @@ const Index = () => {
         <GiftSection />
         <RSVPSection />
         <FooterSection />
+        
+        {/* Mini Audio Player */}
+        {isEnvelopeOpened && <MiniAudioPlayer />}
       </main>
     </>
   );
