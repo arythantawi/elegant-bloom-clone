@@ -40,7 +40,8 @@ const defaultPlaylist: AudioFile[] = [
   {
     title: "Denganmu",
     artist: "Arsy Widianto",
-    url: "/audio/arsy-widianto-denganmu.mp3"
+    url: "/audio/arsy-widianto-denganmu.mp3",
+    "record-art": "/images/arsy-widianto-cover.jpg"
   }
 ];
 
