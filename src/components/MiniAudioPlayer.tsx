@@ -16,8 +16,8 @@ const defaultPlaylist: AudioFile[] = [
   {
     title: "Untuk Perempuan yang Sedang Dalam Pelukan",
     artist: "Payung Teduh",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "record-art": "https://tse1.mm.bing.net/th/id/OIP.Ff0juiEicJMigeJ-fOERmwHaHa?pid=Api&P=0&h=180"
+    url: "/audio/payung-teduh-untuk-perempuan.mp3",
+    "record-art": "/images/payung-teduh-cover.jpeg"
   },
   {
     title: "Anugerah Terindah",
