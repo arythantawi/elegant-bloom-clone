@@ -22,12 +22,14 @@ const defaultPlaylist: AudioFile[] = [
   {
     title: "Anugerah Terindah",
     artist: "Andmesh",
-    url: "/audio/andmesh-anugerah-terindah.mp3"
+    url: "/audio/andmesh-anugerah-terindah.mp3",
+    "record-art": "/images/andmesh-cover.jpg"
   },
   {
     title: "Teman Hidup",
     artist: "Tulus",
-    url: "/audio/tulus-teman-hidup.mp3"
+    url: "/audio/tulus-teman-hidup.mp3",
+    "record-art": "/images/tulus-cover.png"
   },
   {
     title: "Denganmu",
