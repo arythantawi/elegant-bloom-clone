@@ -23,55 +23,19 @@ const defaultPlaylist: AudioFile[] = [
     title: "Anugerah Terindah",
     artist: "Andmesh",
     url: "/audio/andmesh-anugerah-terindah.mp3",
-    "record-art": "https://tse4.mm.bing.net/th/id/OIP.5gkYgTf6YWl4BRAqNRDZfgHaEK?pid=Api&P=0&h=180"
+    "record-art": "/images/payung-teduh-cover.jpeg"
   },
   {
     title: "Teman Hidup",
     artist: "Tulus",
     url: "/audio/tulus-teman-hidup.mp3",
-    "record-art": "https://images.genius.com/0e1f7461eb12776a27ba6485d9461d56.1000x1000x1.png"
-  },
-  {
-    title: "It's You",
-    artist: "Raisa",
-    url: "/audio/raisa-its-you.mp3",
-    "record-art": "https://s3.cosmopolitan.co.id/rsz_screen_shot_2022-03-18_at_103310_54_20220318103408uwpgFY.jpg"
+    "record-art": "/images/payung-teduh-cover.jpeg"
   },
   {
     title: "Denganmu",
     artist: "Arsy Widianto",
     url: "/audio/arsy-widianto-denganmu.mp3",
-    "record-art": "https://www.dailysia.com/wp-content/uploads/2024/08/Arsy-Widianto_1.jpg"
-  },
-  {
-    title: "Perfect",
-    artist: "Ed Sheeran",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-    "record-art": "https://tse1.mm.bing.net/th/id/OIP.GJpza2b3cKzazLygdzDUgQHaEK?pid=Api&P=0&h=180"
-  },
-  {
-    title: "Akad",
-    artist: "Payung Teduh",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
-    "record-art": "https://i.ytimg.com/vi/viW0M5R2BLo/maxresdefault.jpg"
-  },
-  {
-    title: "Jodoh Pasti Bertemu",
-    artist: "Afgan",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-    "record-art": "https://tse2.mm.bing.net/th/id/OIP.5mPrGIIzwaSHeNWhjrP2kAHaEK?pid=Api&P=0&h=180"
-  },
-  {
-    title: "Kasih Putih",
-    artist: "Glenn Fredly",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
-    "record-art": "https://tse3.mm.bing.net/th/id/OIP.GHS4QAs4Tn8Dp43JSciutAHaEK?pid=Api&P=0&h=180"
-  },
-  {
-    title: "Janji Suci",
-    artist: "Kahitna",
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
-    "record-art": "https://i.ytimg.com/vi/qbW3_zlFUDs/maxresdefault.jpg"
+    "record-art": "/images/payung-teduh-cover.jpeg"
   }
 ];
 
