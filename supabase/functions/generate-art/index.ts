@@ -5,12 +5,58 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Simple in-memory rate limiter (resets on function cold start)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 5; // Max requests per window
+const RATE_WINDOW_MS = 60 * 1000; // 1 minute window
+
+function isRateLimited(clientId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(clientId);
+  
+  if (!entry || now > entry.resetTime) {
+    rateLimitMap.set(clientId, { count: 1, resetTime: now + RATE_WINDOW_MS });
+    return false;
+  }
+  
+  if (entry.count >= RATE_LIMIT) {
+    return true;
+  }
+  
+  entry.count++;
+  return false;
+}
+
+function getClientIdentifier(req: Request): string {
+  // Use X-Forwarded-For header or fall back to a generic identifier
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) {
+    return realIp;
+  }
+  // Fallback - use user agent as a weak identifier
+  return req.headers.get('user-agent') || 'unknown';
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Rate limiting check
+    const clientId = getClientIdentifier(req);
+    if (isRateLimited(clientId)) {
+      console.warn(`Rate limit exceeded for client: ${clientId}`);
+      return new Response(
+        JSON.stringify({ error: 'Terlalu banyak permintaan. Coba lagi dalam 1 menit.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { imageData, style } = await req.json();
     
     if (!imageData) {
@@ -43,7 +89,7 @@ serve(async (req) => {
 
     const stylePrompt = stylePrompts[style] || stylePrompts['romantic'];
     
-    console.log('Transforming image with style:', style);
+    console.log('Transforming image with style:', style, 'for client:', clientId);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -98,7 +144,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('AI response received');
+    console.log('AI response received for client:', clientId);
     
     const resultImage = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
 
